@@ -1,0 +1,10 @@
+{
+    "/posts": {
+        "target": "https://www.youtube.com/watch?v=0yOqZjJqWIs&feature=youtu.be",
+        "secure": true,
+        "pathRewrite": {
+            "^/posts": ""
+        },
+        "changeOrigin": true
+    }
+}

@@ -28,6 +28,7 @@ speed-measure-plugin.json
 !.vscode/launch.json
 !.vscode/extensions.json
 .history/*
+kahani.code-workspace
 
 # misc
 /.sass-cache
@@ -42,3 +43,11 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# personal and private
+# src/environments/environment\.prod\.ts
+/functions/node_modules
+src/environments/environment.prod.ts
+/*.rules
+src/assets
+/.firebase

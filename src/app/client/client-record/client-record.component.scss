@@ -1,0 +1,27 @@
+section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+#vid {
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    // z-index: -1;
+}
+#webcam > div > video {
+    width: 100vw !important;
+    height: 100vh !important;
+    object-fit: cover;
+}
+#webcam {
+    flex-grow: 1;
+    overflow: hidden;
+}
+// video {
+//     width: 100vw !important;
+//     height: 100vh !important;
+// }

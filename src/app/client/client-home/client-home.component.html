@@ -1,0 +1,19 @@
+<section>
+    <div id="bg">
+        <video playsinline loop muted autoplay preload poster="/assets/GC.png">
+            <source src="/assets/GC.mp4" type="video/mp4">
+        </video>
+        <div id="bg-overlay"></div>
+    </div>
+    <div id="inner">
+        <div id="header">
+            <img src="/assets/Project-X-ITE.png">
+        </div>
+        <div id="subtitle">
+            <h2>YOU HAVE GREAT STORIES. AND WE WANT TO HEAR THEM.</h2>
+            
+        </div>
+        <h4 id="tos">I agree to the <a [routerLink]="'/tos'">TOS</a><input [(ngModel)]="TOS" type="checkbox" /></h4>
+        <a id="pager" [routerLink]="[ '/record']" [style.pointer-events]="TOS ?'auto':'none'">&or;</a>
+    </div>
+</section>
