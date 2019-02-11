@@ -1,9 +1,36 @@
 <section>
     <div id="vid">
-        <h1>Web recorder here</h1>
-        <!-- todo add middle page for information-->
-        <!--TODO: unsupport uption for upload-->
-        <!-- <webcam id="webcam" [width]="videoWidth" [height]="videoHeight" [videoOptions]="videoOptions"></webcam> -->
+        <app-question #question [ngClass]="{'overlayQ': overlayQ}" (details)="recordReady(deviceList,true, true)" ></app-question>
+        <div>
+            <div #outer></div>
+            <div #recordButton style="pointer-events: none;">
+                <!-- <mat-icon [ngStyle]="{'color': buttonColor}">fiber_manual_record</mat-icon> -->
+            </div>
+            <div #pauseButton>
+                <mat-icon [ngStyle]="{'color': buttonColor}">pause_circle_outline</mat-icon>
+            </div>
+            <div #fsButton>
+                <mat-icon [ngStyle]="{'color': buttonColor}">fullscreen</mat-icon>
+            </div>
+            <div #camButton>
+                <mat-icon>videocam</mat-icon>
+            </div>
+            <div #stopButton>
+                <mat-icon>stop</mat-icon>
+            </div>
+        </div>
+    </div>
+    <div #spinner class="spinner">
+        <mat-progress-spinner [mode]="recordInit ? 'determinate' : 'indeterminate'" [value]="spinnerProgress"></mat-progress-spinner>
+        <p>{{recordText}}</p>
+        <!-- [mode]="!recordInit ? 'determinate' : 'indeterminate'" -->
+    </div>
+    <div #startPopup class="starter">
+        <button mat-fab color="warn" matTooltip="You'll have 3 seconds before recording starts"
+        matTooltipPosition="right" (click)="startRecord()">Record</button>
+    </div>
+    <div #sendPopup class="sender">
+        <button mat-fab (click)="sendRecord()">Submit</button>
     </div>
     <!--   -->
     <!-- <video #webCamVideo width="400" height="400"> -->

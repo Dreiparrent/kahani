@@ -1,0 +1,16 @@
+<div #outer>
+    <h1>Project X-ite</h1>
+    <h2>Questions</h2>
+    <mat-action-list>
+        <ng-container *ngFor="let question of questions">
+            <button mat-list-item>{{question}}</button>
+            <mat-divider></mat-divider>
+        </ng-container>
+    </mat-action-list>
+    <h2>Details</h2>
+    <mat-action-list>
+        <h3>Your Name</h3>
+        <mat-divider></mat-divider>
+        <button mat-list-item (click)="changeDetails()">Change Details</button>
+    </mat-action-list>
+</div>

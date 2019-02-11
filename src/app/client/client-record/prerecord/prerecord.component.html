@@ -1,0 +1,39 @@
+<h1 mat-dialog-title>{{ data.updating ? 'Update your recording' : 'Before we begin...'}}</h1>
+<div mat-dialog-content>
+    <form>
+        <h4>{{ data.updating ? 'Your details' : 'Tell us about yourself' }}</h4>
+        <mat-form-field>
+            <input matInput placeholder="Name">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="Email">
+        </mat-form-field>
+        <mat-expansion-panel [expanded]="openExtra">
+            <mat-expansion-panel-header>
+                Extra Details
+            </mat-expansion-panel-header>
+            <mat-form-field>
+                <input matInput placeholder="extra details">
+            </mat-form-field>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                Devices
+            </mat-expansion-panel-header>
+            <mat-button-toggle-group #videoToggle="matButtonToggleGroup" [vertical]="true">
+                <mat-button-toggle *ngFor="let video of videoDevices; index as i" [value]="video.deviceId" [checked]="i == 0">
+                    {{video.label}}
+                </mat-button-toggle>
+            </mat-button-toggle-group>
+            <mat-button-toggle-group #audioToggle="matButtonToggleGroup" vertical="true">
+                <mat-button-toggle *ngFor="let audio of audioDevices; index as i" [value]="audio.deviceId" [checked]="i == 0">
+                    {{audio.label}}
+                </mat-button-toggle>
+            </mat-button-toggle-group>
+        </mat-expansion-panel>
+    </form>
+</div>
+<div mat-dialog-actions>
+    <!-- <button mat-button (click)="goClick()">Go</button> -->
+    <button mat-button [mat-dialog-close]="sendDevices()" cdkFocusInitial>Start Recording</button>
+</div>

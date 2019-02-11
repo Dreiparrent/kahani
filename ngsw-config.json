@@ -18,7 +18,7 @@
       "updateMode": "prefetch",
       "resources": {
         "files": [
-          "/assets/**",
+          "/assets/*.(png|jpg)",
           "/*.(eot|svg|cur|jpg|png|webp|gif|otf|ttf|woff|woff2|ani)"
         ]
       }

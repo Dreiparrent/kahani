@@ -1,33 +1,90 @@
-import { Component, OnInit, ViewChild, AfterContentInit, ChangeDetectorRef } from '@angular/core';
+import { Record } from 'videojs-record/dist/videojs.record.js';
+import { FirebaseService } from './../../firebase/firebase.service';
+import {
+    Component, OnInit, ViewChild, ElementRef, ViewEncapsulation
+} from '@angular/core';
+import { QuestionComponent } from './question/question.component';
+// import { RecordComponent } from './record/record.component';
+import { ResizeService } from 'src/app/resize/resize.service';
+import { Recorder } from './record/recorder';
+import { playConfig } from 'src/typings';
+import { environment } from 'src/environments/environment';
+import { MatDialog } from '@angular/material';
+import { PrerecordComponent, IDialogData, IPreOutput } from './prerecord/prerecord.component';
 
 @Component({
-  selector: 'app-client-record',
-  templateUrl: './client-record.component.html',
-  styleUrls: ['./client-record.component.scss']
+    selector: 'app-client-record',
+    templateUrl: './client-record.component.html',
+    styleUrls: ['./client-record.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
-export class ClientRecordComponent implements OnInit, AfterContentInit {
-
-    @ViewChild('webCamVideo') webCamVideo: HTMLVideoElement;
-    @ViewChild('webSource') webSource: HTMLSourceElement;
-    public ws = '/assets/GC.mp4';
-    public get videoWidth() {
-        return window.innerWidth;
+export class ClientRecordComponent implements OnInit {
+    @ViewChild('question') question: QuestionComponent;
+    @ViewChild('outer') outer: ElementRef<HTMLDivElement>;
+    @ViewChild('recordButton') recordButton: ElementRef<HTMLDivElement>;
+    @ViewChild('pauseButton') pauseButton: ElementRef<HTMLDivElement>;
+    @ViewChild('fsButton') fsButton: ElementRef<HTMLDivElement>;
+    @ViewChild('camButton') camButton: ElementRef<HTMLDivElement>;
+    @ViewChild('stopButton') stopButton: ElementRef<HTMLDivElement>;
+    @ViewChild('spinner') spinner: ElementRef<HTMLDivElement>;
+    @ViewChild('startPopup') startPopup: ElementRef<HTMLDivElement>;
+    @ViewChild('sendPopup') sendPopup: ElementRef<HTMLDivElement>;
+    public buttonColor = environment.recorder.buttonColor;
+    recordInit = false;
+    spinnerProgress = 0;
+    _recordProgress = 4;
+    get recordText() {
+        switch (this._recordProgress) {
+            case 0:
+                return 'Go';
+            case 1:
+            case 2:
+            case 3:
+                return this._recordProgress.toString();
+            case 4:
+            default:
+                return '';
+        }
     }
-    public get videoHeight() {
-        return window.innerHeight;
-    }
-    public get videoOptions(): MediaTrackConstraints {
+    overlayQ = false;
+    player: Recorder;
+    deviceList: MediaDeviceInfo[] = [];
+    public videoDevice = '';
+    public audioDevice = '';
+    get config(): playConfig {
         return {
-            // aspectRatio: 1.777777778,
-            width: window.innerWidth,
-            height: window.innerHeight
+            autoplay: true,
+            controls: false,
+            fluid: true,
+            // loop: false,
+            // width: 320,
+            // height: 240,
+            controlBar: {
+                volumePanel: false
+            },
+            plugins: {
+                record: {
+                    audio: {
+                        optional: [{ sourceId: this.audioDevice }],
+                        muted: false
+                    },
+                    video: {
+                        optional: [{ sourceId: this.videoDevice }]
+                    },
+                    debug: !environment.production,
+                    maxLength: 60
+                }
+            }
         };
     }
 
-    constructor(private cdRef: ChangeDetectorRef) { }
-
+    constructor(private dialog: MatDialog, private resizeService: ResizeService, private firebase: FirebaseService) { }
+    // TODO: absolute the time and have appear at the top
+    // TODO: put recoding indicator to the right of the time
+    // TODO: remove bottom bar color
+    // TODO: keep position of play/pause button at bottom
+    // TODO: keep position of fs button at the bottom right of the screen
     ngOnInit() {
-        console.log('init');
         // navigator.permissions.query({ name: 'microphone' })
         //     .then((permissionObj) => {
         //         console.log(permissionObj.state);
@@ -44,52 +101,147 @@ export class ClientRecordComponent implements OnInit, AfterContentInit {
         //         console.log('Got error :', error);
         //     });
 
-
-        window.addEventListener('resize', () => {
-            this.cdRef.detectChanges();
-            const vid = document.getElementsByTagName('video')[0];
-            const at = vid.getAttribute('width');
-            console.log(at);
-            vid.setAttribute('width', window.innerWidth.toString());
-            vid.setAttribute('height', window.innerHeight.toString());
-            // vid.setAttribute('aspectRatio', `${window.innerWidth / window.innerHeight}`);
-            // vid.setAttribute('videoWidth', window.innerWidth.toString());
-            // console.log(vid.getAttribute('aspectRatio'));
+        // window.addEventListener('resize', () => {
+        //     this.cdRef.detectChanges();
+        //     const vid = document.getElementsByTagName('video')[0];
+        //     const at = vid.getAttribute('width');
+        //     // console.log(at);
+        //     vid.setAttribute('width', window.innerWidth.toString());
+        //     vid.setAttribute('height', window.innerHeight.toString());
+        //     // vid.setAttribute('aspectRatio', `${window.innerWidth / window.innerHeight}`);
+        //     // vid.setAttribute('videoWidth', window.innerWidth.toString());
+        //     // console.log(vid.getAttribute('aspectRatio'));
+        // });
+        this.resizeService.window.subscribe(w => {
+            this.setOver();
         });
+        this.player = new Recorder(this.outer.nativeElement, 1, this.config, {
+            record: this.recordButton.nativeElement,
+            pause: this.pauseButton.nativeElement,
+            fullscreen: this.fsButton.nativeElement,
+            cam: this.camButton.nativeElement,
+            stop: this.stopButton.nativeElement
+        }, this.firebase.uploadRecord.bind(this), this.resetRecord.bind(this), this.recordReady.bind(this), this.deviceReady.bind(this));
+
     }
 
-    ngAfterContentInit(): void {
-        // const vid = document.getElementsByTagName('video')[0];
-        // vid.videoTracks.addEventListener('addtrack', (ev) => console.log(ev));
-        // navigator.getDisplayMedia({ video: true, audio: true }).then(s => console.log(s));
-        // navigator.getUserMedia({
-        //     video: true,
-        //     audio: true
-        // }, function (e: MediaStream) {
-        //     console.log('got', e);
-        // }, function (e) {
-        //     console.log('notGot', e);
-        //     });
-        navigator.mediaDevices.enumerateDevices().then(d => {
-            console.log(d.map(dd => dd.kind));
-            return d;
-        }).then((d) => {
-            return d.find(dd => dd.kind === 'videoinput');
-        }).then(async (v: MediaDeviceInfo) => {
-            const vv = await v;
-            const stream = await navigator.mediaDevices.getUserMedia({
-                video: {
-                    deviceId: { exact: vv.deviceId }
-                },
-                audio: false
+    overQ(over: boolean) {
+        console.log(over);
+    }
+
+    recordReady(devices: MediaDeviceInfo[], initial: boolean, change = false) {
+        // this.spinner.nativeElement.style.display = initial ? 'block' : 'none';
+        this.spinner.nativeElement.style.left = `calc(50vw + ${this.question.outer.nativeElement.clientWidth}px)`;
+        this.deviceList = devices;
+        if (initial) {
+            const dialogRef = this.dialog.open<PrerecordComponent, IDialogData, IPreOutput>(PrerecordComponent, {
+                disableClose: true,
+                data: { devices: this.deviceList, updating: change }
             });
-            // console.log(this.webCamVideo);
-            // this.webSource
-            // this.webCamVideo.innerHTML = '<source src="assets/GC.mp4">';
-            // this.webSource.src = '';
-            // this.webCamVideo.src = await window.URL.createObjectURL(stream);
-            // this.webCamVideo.play();
-        });
+            dialogRef.afterClosed().subscribe(result => {
+                console.log(result);
+                this.videoDevice = result.video;
+                this.audioDevice = result.audio;
+                this.player.destroy();
+                this.player.init(this.config);
+                // this.spinner.nativeElement.style.display = 'none';
+                // this.animal = result;
+            });
+            if (environment.recorder.popup.skip)
+                dialogRef.close({ video: environment.recorder.videoDevice, audio: '' });
+        }
+        // this.player.start();
     }
 
+    deviceReady() {
+        this.startPopup.nativeElement.style.display = 'block';
+        this.startPopup.nativeElement.style.right =
+            this.spinner.nativeElement.style.right =
+            `calc(50vw - ${this.question.outer.nativeElement.clientWidth / 2}px)`;
+        this.startPopup.nativeElement.style.top = '50vh';
+        this.recordInit = true;
+        if (environment.recorder.countdown.skip)
+            this.startRecord();
+    }
+
+    startRecord() {
+        this.startPopup.nativeElement.style.display = 'none';
+        this.sendPopup.nativeElement.style.display = 'none';
+        this.startPopup.nativeElement.style.top = '9vw';
+        this.startPopup.nativeElement.style.right = '3vw';
+        this.startPopup.nativeElement.style.transform = 'translate(-50%)';
+        let reset = true;
+        this._recordProgress = 3;
+        this.spinnerProgress = 100;
+        if (environment.recorder.countdown.skip) {
+            if (environment.recorder.countdown.start) {
+                this.spinner.nativeElement.style.display = 'none';
+                this.spinnerProgress = 0;
+                this.player.beginRecord();
+            } else {
+                this.spinnerProgress = 100;
+            }
+        } else {
+            const interval = setInterval(() => {
+                // if (this.spinnerProgress  100)
+                //     this.spinnerProgress = 0;
+                if (reset)
+                    this.spinnerProgress -= 100;
+                else this.spinnerProgress += 100;
+                this._recordProgress -= 1;
+                reset = !reset;
+            }, 1000);
+            setTimeout(() => {
+                clearInterval(interval);
+                this.spinner.nativeElement.style.display = 'none';
+                this.spinnerProgress = 0;
+                this.player.beginRecord();
+            }, 3900);
+        }
+    }
+    resetRecord(afterVideo = false) {
+        this.startPopup.nativeElement.style.display = 'block';
+        this.sendPopup.nativeElement.style.display = 'block';
+        this._recordProgress = 4;
+        this.spinner.nativeElement.style.display = 'block';
+    }
+    sendRecord() {
+        if (!environment.recorder.upload.skip) {
+            console.log('send');
+        }
+    }
+
+    setOver() {
+        this.deviceReady();
+        const videoElem = document.getElementById('video_1');
+        const controlBar = document.getElementsByClassName(
+            'vjs-control-bar'
+        ) as HTMLCollectionOf<HTMLElement>;
+        const videoPlayer = document.getElementsByTagName('video');
+        if (this.overlayQ && controlBar[0].clientWidth > 250) {
+            this.overlayQ = false;
+            videoElem.style.flexDirection = 'column';
+            // videoElem.style.height = '95vh';
+            // this.recorder.
+            // videoElem.className += 'videoOver';
+            controlBar[0].style.flexDirection = 'column';
+            controlBar[0].style.height = '5vh';
+            controlBar[0].style.width = '100%';
+            controlBar[0].style.flexGrow = '0';
+            videoPlayer[0].style.width = 'auto';
+            videoPlayer[0].style.height = '95vh';
+        } else if (!this.overlayQ && this.question.overlay) {
+            this.overlayQ = true;
+            videoElem.style.flexDirection = 'row-reverse';
+            videoElem.style.height = '100vh';
+            // this.recorder.
+            // videoElem.className += 'videoOver';
+            controlBar[0].style.flexDirection = 'column';
+            controlBar[0].style.height = '100%';
+            controlBar[0].style.width = 'auto';
+            controlBar[0].style.flexGrow = '1';
+            videoPlayer[0].style.width = 'auto';
+            videoPlayer[0].style.height = '100%';
+        }
+    }
 }
