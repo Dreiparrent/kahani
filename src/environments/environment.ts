@@ -24,7 +24,7 @@ export const environment = {
             skip: true
         },
         videoDevice: videoDevices[VideoDevices.rear],
-        buttonColor: 'black',
+        buttonColor: 'white',
     },
     firebase: {
         apiKey: 'AIzaSyAR4UjEAaBkOKrOLndkoQolD0TlVOkPo30',
@@ -33,6 +33,10 @@ export const environment = {
         projectId: 'kahani-dev',
         storageBucket: 'kahani-dev.appspot.com',
         messagingSenderId: '355817783626'
+    },
+    version: {
+        includeVersion: false,
+        version: '0.1.2'
     }
 };
 

@@ -14,11 +14,13 @@ import { ClientModule } from './client/client.module';
 import { FirebaseService } from './firebase/firebase.service';
 import { ResizeService } from './resize/resize.service';
 import { AngularFireStorageModule } from '@angular/fire/storage';
+import { VersionComponent } from './version/version.component';
 
 @NgModule({
     declarations: [
         AppComponent,
-        TestDashComponent
+        TestDashComponent,
+        VersionComponent
     ],
     imports: [
         ClientModule,

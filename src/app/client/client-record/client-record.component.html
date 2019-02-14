@@ -1,6 +1,6 @@
-<section>
+<section #vidSec>
     <div id="vid">
-        <app-question #question [ngClass]="{'overlayQ': overlayQ}" (details)="recordReady(deviceList,true, true)" ></app-question>
+        <app-question #question [ngClass]="{'overlayQ': question.isOverlay}" (details)="recordReady(deviceList,true, true)" ></app-question>
         <div>
             <div #outer></div>
             <div #recordButton style="pointer-events: none;">
@@ -27,7 +27,7 @@
     </div>
     <div #startPopup class="starter">
         <button mat-fab color="warn" matTooltip="You'll have 3 seconds before recording starts"
-        matTooltipPosition="right" (click)="startRecord()">Record</button>
+        matTooltipPosition="right" (click)="recordClick()">{{recordStop}}</button>
     </div>
     <div #sendPopup class="sender">
         <button mat-fab (click)="sendRecord()">Submit</button>

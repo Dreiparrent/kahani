@@ -21,6 +21,7 @@ import { PrerecordComponent, IDialogData, IPreOutput } from './prerecord/prereco
 export class ClientRecordComponent implements OnInit {
     @ViewChild('question') question: QuestionComponent;
     @ViewChild('outer') outer: ElementRef<HTMLDivElement>;
+    @ViewChild('vidSec') vidSec: ElementRef<HTMLDivElement>;
     @ViewChild('recordButton') recordButton: ElementRef<HTMLDivElement>;
     @ViewChild('pauseButton') pauseButton: ElementRef<HTMLDivElement>;
     @ViewChild('fsButton') fsButton: ElementRef<HTMLDivElement>;
@@ -46,7 +47,9 @@ export class ClientRecordComponent implements OnInit {
                 return '';
         }
     }
-    overlayQ = false;
+    get recordStop() {
+        return this._recordProgress === 4 ? 'Start' : 'Stop';
+    }
     player: Recorder;
     deviceList: MediaDeviceInfo[] = [];
     public videoDevice = '';
@@ -154,27 +157,39 @@ export class ClientRecordComponent implements OnInit {
     }
 
     deviceReady() {
+        if (!this.recordInit)
+            this.setOver();
         this.startPopup.nativeElement.style.display = 'block';
         this.startPopup.nativeElement.style.right =
             this.spinner.nativeElement.style.right =
             `calc(50vw - ${this.question.outer.nativeElement.clientWidth / 2}px)`;
         this.startPopup.nativeElement.style.top = '50vh';
+        if (!this.recordInit && environment.recorder.countdown.skip)
+            this.recordClick();
         this.recordInit = true;
-        if (environment.recorder.countdown.skip)
+    }
+
+    recordClick() {
+        if (this.player.player.record().isRecording())
+            this.player.player.record().stop();
+        else
             this.startRecord();
     }
 
     startRecord() {
         this.startPopup.nativeElement.style.display = 'none';
-        this.sendPopup.nativeElement.style.display = 'none';
-        this.startPopup.nativeElement.style.top = '9vw';
-        this.startPopup.nativeElement.style.right = '3vw';
+        this.sendPopup.nativeElement.style.right = this.question.isOverlay ? '30vw' : '-30vw';
         this.startPopup.nativeElement.style.transform = 'translate(-50%)';
         let reset = true;
         this._recordProgress = 3;
         this.spinnerProgress = 100;
+        const playButton = document.getElementsByClassName('vjs-play-control')[0] as HTMLDivElement;
+        if (playButton)
+            playButton.style.right = this.question.isOverlay ? '30vw' : '-30vw';
         if (environment.recorder.countdown.skip) {
             if (environment.recorder.countdown.start) {
+                this.startPopup.nativeElement.style.display = 'block';
+                this.startPopup.nativeElement.style.right = '3vw';
                 this.spinner.nativeElement.style.display = 'none';
                 this.spinnerProgress = 0;
                 this.player.beginRecord();
@@ -193,6 +208,8 @@ export class ClientRecordComponent implements OnInit {
             }, 1000);
             setTimeout(() => {
                 clearInterval(interval);
+                this.startPopup.nativeElement.style.display = 'block';
+                this.startPopup.nativeElement.style.right = '3vw';
                 this.spinner.nativeElement.style.display = 'none';
                 this.spinnerProgress = 0;
                 this.player.beginRecord();
@@ -200,8 +217,10 @@ export class ClientRecordComponent implements OnInit {
         }
     }
     resetRecord(afterVideo = false) {
-        this.startPopup.nativeElement.style.display = 'block';
         this.sendPopup.nativeElement.style.display = 'block';
+        this.sendPopup.nativeElement.style.right = '3vw';
+        const playButton = document.getElementsByClassName('vjs-play-control')[0] as HTMLDivElement;
+        playButton.style.right = '3vw';
         this._recordProgress = 4;
         this.spinner.nativeElement.style.display = 'block';
     }
@@ -212,36 +231,21 @@ export class ClientRecordComponent implements OnInit {
     }
 
     setOver() {
-        this.deviceReady();
+        if (this.recordInit)
+            this.deviceReady();
         const videoElem = document.getElementById('video_1');
         const controlBar = document.getElementsByClassName(
             'vjs-control-bar'
         ) as HTMLCollectionOf<HTMLElement>;
         const videoPlayer = document.getElementsByTagName('video');
-        if (this.overlayQ && controlBar[0].clientWidth > 250) {
-            this.overlayQ = false;
-            videoElem.style.flexDirection = 'column';
-            // videoElem.style.height = '95vh';
-            // this.recorder.
-            // videoElem.className += 'videoOver';
-            controlBar[0].style.flexDirection = 'column';
-            controlBar[0].style.height = '5vh';
-            controlBar[0].style.width = '100%';
-            controlBar[0].style.flexGrow = '0';
-            videoPlayer[0].style.width = 'auto';
-            videoPlayer[0].style.height = '95vh';
-        } else if (!this.overlayQ && this.question.overlay) {
-            this.overlayQ = true;
-            videoElem.style.flexDirection = 'row-reverse';
-            videoElem.style.height = '100vh';
-            // this.recorder.
-            // videoElem.className += 'videoOver';
-            controlBar[0].style.flexDirection = 'column';
-            controlBar[0].style.height = '100%';
-            controlBar[0].style.width = 'auto';
-            controlBar[0].style.flexGrow = '1';
-            videoPlayer[0].style.width = 'auto';
-            videoPlayer[0].style.height = '100%';
+        if (this.question.isOverlay && controlBar[0].clientWidth > 250) {
+            this.question.isOverlay = false;
+            this.vidSec.nativeElement.className = '';
+        } else if (!this.question.isOverlay && this.question.shouldOverlay) {
+            this.question.isOverlay = true;
+            this.vidSec.nativeElement.className = 'videoOver';
         }
+        this.startPopup.nativeElement.style.right = '3vw';
+        this.sendPopup.nativeElement.style.right = this.question.isOverlay ? '30vw' : '-30vw';
     }
 }
