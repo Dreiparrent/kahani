@@ -1,4 +1,4 @@
-<div #outer>
+<div #outer class="outer">
     <h1>Project X-ite</h1>
     <h2>Questions</h2>
     <mat-action-list>
@@ -9,7 +9,9 @@
     </mat-action-list>
     <h2>Details</h2>
     <mat-action-list>
-        <h3>Your Name</h3>
+
+        <h3>{{userData.name}}</h3>
+        <h3>{{userData.email}}</h3>
         <mat-divider></mat-divider>
         <button mat-list-item (click)="changeDetails()">Change Details</button>
     </mat-action-list>

@@ -1,3 +1,4 @@
+import { IBaseUserData } from './../../firebase/constatnts';
 import { Record } from 'videojs-record/dist/videojs.record.js';
 import { FirebaseService } from './../../firebase/firebase.service';
 import {
@@ -34,6 +35,7 @@ export class ClientRecordComponent implements OnInit {
     recordInit = false;
     spinnerProgress = 0;
     _recordProgress = 4;
+    userData: IBaseUserData = { name: '', email: '' };
     get recordText() {
         switch (this._recordProgress) {
             case 0:
@@ -136,22 +138,40 @@ export class ClientRecordComponent implements OnInit {
         // this.spinner.nativeElement.style.display = initial ? 'block' : 'none';
         this.spinner.nativeElement.style.left = `calc(50vw + ${this.question.outer.nativeElement.clientWidth}px)`;
         this.deviceList = devices;
+        if (change)
+            this.resetRecord();
         if (initial) {
-            const dialogRef = this.dialog.open<PrerecordComponent, IDialogData, IPreOutput>(PrerecordComponent, {
-                disableClose: true,
-                data: { devices: this.deviceList, updating: change }
-            });
+            const sendData: IDialogData = {
+                devices: this.deviceList, updating: change,
+                userQuestions: this.firebase.testClientConfig.userQuestions,
+            };
+            if (this.firebase.testClientConfig.extraQuestions)
+                sendData.extraQuestions = this.firebase.testClientConfig.extraQuestions;
+            console.log(sendData, this.firebase.testClientConfig);
+            const dialogRef = this.dialog.open<PrerecordComponent<IBaseUserData>, IDialogData, IPreOutput<IBaseUserData>>(
+                PrerecordComponent, {
+                    disableClose: true,
+                    data: sendData
+                });
             dialogRef.afterClosed().subscribe(result => {
-                console.log(result);
                 this.videoDevice = result.video;
                 this.audioDevice = result.audio;
                 this.player.destroy();
                 this.player.init(this.config);
-                // this.spinner.nativeElement.style.display = 'none';
-                // this.animal = result;
+                this.userData = result.userDetails;
+                this.firebase.testClientConfig.userQuestions.map(q => {
+                    q.value = result.userDetails[q.key];
+                });
+                if (result.extraDetails)
+                    this.firebase.testClientConfig.extraQuestions.map(q => {
+                        q.value = result.extraDetails[q.key];
+                    });
             });
             if (environment.recorder.popup.skip)
-                dialogRef.close({ video: environment.recorder.videoDevice, audio: '' });
+                dialogRef.close({
+                    video: environment.recorder.videoDevice,
+                    audio: '', userDetails: { name: 'name', email: 'email' }
+                });
         }
         // this.player.start();
     }

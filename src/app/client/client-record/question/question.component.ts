@@ -1,12 +1,14 @@
 import { FirebaseService } from './../../../firebase/firebase.service';
-import { Component, OnInit, HostListener, AfterViewChecked, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, HostListener, AfterViewChecked, ViewChild, ElementRef, Output, EventEmitter, Input } from '@angular/core';
+import { IBaseUserData } from 'src/app/firebase/constatnts';
 
 @Component({
-    selector: 'app-question',
+    selector: 'app-client-question',
     templateUrl: './question.component.html',
     styleUrls: ['./question.component.scss'],
 })
 export class QuestionComponent implements OnInit {
+    @Input() userData: IBaseUserData;
     @ViewChild('outer') outer: ElementRef<HTMLDivElement>;
     questions: string[] = [];
     @Output() details: EventEmitter<boolean> = new EventEmitter();

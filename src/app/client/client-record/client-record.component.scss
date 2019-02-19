@@ -20,7 +20,7 @@ mat-sidenav-content {
     flex-direction: row;
     // z-index: -1;
 }
-app-question {
+app-client-question {
     flex-shrink: 0;
     // flex: 4;
     z-index: 100;
@@ -146,6 +146,7 @@ video.vjs-tech {
     // width: 100%;
     // width: 100% !important;
     // height: 100%;
+    flex-shrink: 0;
     height: 100vh;
     width: auto;
     // flex-grow: 1;

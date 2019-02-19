@@ -1,15 +1,27 @@
-export class ClientConfig implements ClientConfigBasse {
-    constructor(
-        public name: string,
-        public head: IClientText,
-        public subhead: IClientText,
-        public link: IClientText,
-        public hasImg = false,
-        public hasVideo = false,
-        public questions: IClientQuestion[]
-    ) {
-        this.head.style = this.getStyle(this.head.config);
-        this.subhead.style = this.getStyle(this.subhead.config);
+import { QuestionBase } from './../shared/forms/question-base';
+export class ClientConfig implements ClientConfigBase {
+    name: string;
+    head: IClientText;
+    subhead: IClientText;
+    link: IClientText;
+    hasImg: boolean;
+    hasVideo: boolean;
+    questions: IClientQuestion[];
+    userQuestions: QuestionBase<any>[];
+    extraQuestions: QuestionBase<any>[];
+    constructor(public config: ClientConfigBase) {
+        this.name = config.name;
+        this.head = config.head;
+        this.subhead = config.subhead;
+        this.link = config.link;
+        this.hasImg = config.hasImg;
+        this.hasVideo = config.hasVideo;
+        this.questions = config.questions;
+        this.userQuestions = config.userQuestions;
+        if (config.extraQuestions)
+            this.extraQuestions = config.extraQuestions;
+        this.config.head.style = this.getStyle(this.config.head.config);
+        this.config.subhead.style = this.getStyle(this.config.subhead.config);
     }
     private getStyle = (sets: ITextStyle): string => {
         let baseStyle = '';
@@ -20,7 +32,7 @@ export class ClientConfig implements ClientConfigBasse {
         return baseStyle;
     }
 }
-export interface ClientConfigBasse {
+export interface ClientConfigBase {
     name: string;
     head: IClientText;
     subhead: IClientText;
@@ -28,6 +40,8 @@ export interface ClientConfigBasse {
     hasImg: boolean;
     hasVideo: boolean;
     questions: IClientQuestion[];
+    userQuestions: QuestionBase<any>[];
+    extraQuestions?: QuestionBase<any>[];
 }
 interface IClientText {
     hasImg?: boolean;
@@ -42,4 +56,8 @@ interface ITextStyle {
 interface IClientQuestion {
     text: string;
     length: number;
+}
+export interface IBaseUserData {
+    email: string;
+    name: string;
 }

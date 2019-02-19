@@ -1,3 +1,4 @@
+import { KahaniFormsModule } from './shared/forms/forms.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
@@ -28,7 +29,6 @@ import { VersionComponent } from './version/version.component';
         BrowserAnimationsModule,
         AppRoutingModule,
         ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
-        BrowserAnimationsModule,
         AngularFireModule.initializeApp(environment.firebase),
         AngularFireStorageModule,
         MatGridListModule,
@@ -37,11 +37,12 @@ import { VersionComponent } from './version/version.component';
         MatIconModule,
         MatButtonModule,
         LayoutModule,
-        MatSidenavModule
+        MatSidenavModule,
+        KahaniFormsModule
     ],
     providers: [
         FirebaseService,
-        ResizeService,
+        ResizeService
     ],
     bootstrap: [AppComponent]
 })

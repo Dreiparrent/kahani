@@ -1,0 +1,10 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="form">
+
+    <ng-container *ngFor="let question of questions" class="form-row">
+        <app-question [question]="question" [form]="form"></app-question>
+    </ng-container>
+
+    <!-- <div class="form-row">
+        <button type="submit" [disabled]="!form.valid">Save</button>
+    </div> -->
+</form>

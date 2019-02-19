@@ -1,6 +1,8 @@
 <section #vidSec>
     <div id="vid">
-        <app-question #question [ngClass]="{'overlayQ': question.isOverlay}" (details)="recordReady(deviceList,true, true)" ></app-question>
+        <app-client-question #question [userData]="userData"
+        [ngClass]="{'overlayQ': question.isOverlay}" (details)="recordReady(deviceList,true, true)" >
+        </app-client-question>
         <div>
             <div #outer></div>
             <div #recordButton style="pointer-events: none;">
@@ -26,7 +28,7 @@
         <!-- [mode]="!recordInit ? 'determinate' : 'indeterminate'" -->
     </div>
     <div #startPopup class="starter">
-        <button mat-fab color="warn" matTooltip="You'll have 3 seconds before recording starts"
+        <button mat-fab [color]="_recordProgress === 4 ? 'primary' : 'warn'" matTooltip="You'll have 3 seconds before recording starts"
         matTooltipPosition="right" (click)="recordClick()">{{recordStop}}</button>
     </div>
     <div #sendPopup class="sender">

@@ -1,20 +1,13 @@
 <h1 mat-dialog-title>{{ data.updating ? 'Update your recording' : 'Before we begin...'}}</h1>
 <div mat-dialog-content>
     <form>
-        <h4>{{ data.updating ? 'Your details' : 'Tell us about yourself' }}</h4>
-        <mat-form-field>
-            <input matInput placeholder="Name">
-        </mat-form-field>
-        <mat-form-field>
-            <input matInput placeholder="Email">
-        </mat-form-field>
-        <mat-expansion-panel [expanded]="openExtra">
+    <h4>{{ data.updating ? 'Your details' : 'Tell us about yourself' }}</h4>
+    <app-dynamic-form #userForm [questions]="data.userQuestions" (submit)="sendDevices()"></app-dynamic-form>
+        <mat-expansion-panel *ngIf="extraQuestions"  [expanded]="openExtra">
             <mat-expansion-panel-header>
                 Extra Details
             </mat-expansion-panel-header>
-            <mat-form-field>
-                <input matInput placeholder="extra details">
-            </mat-form-field>
+            <app-dynamic-form #extraForm [questions]="extraQuestions" (submit)="sendDevices()"></app-dynamic-form>
         </mat-expansion-panel>
         <mat-expansion-panel>
             <mat-expansion-panel-header>
@@ -33,7 +26,7 @@
         </mat-expansion-panel>
     </form>
 </div>
-<div mat-dialog-actions>
+<div mat-dialog-actions align="end">
     <!-- <button mat-button (click)="goClick()">Go</button> -->
-    <button mat-button [mat-dialog-close]="sendDevices()" cdkFocusInitial>Start Recording</button>
+    <button mat-button [mat-dialog-close]="sendDevices()" cdkFocusInitial [disabled]="isDisabled">Start Recording</button>
 </div>
