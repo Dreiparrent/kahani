@@ -3,7 +3,7 @@
 Live version currently found [here](https://kahani.aparrent.com).
 
 ## Changelog
-[Here]() is my best attempt to document all relevant changes.
+[Here](CHANGELOG.md) is my best attempt to document all relevant changes.
 
 ### Versioning
 Each update with significant changes, *like new pages*, will be branched in a new version.
