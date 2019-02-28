@@ -36,7 +36,7 @@ app-client-question {
     height: 200px;
     z-index: 20;
 }
-.videoOver {
+%overSettings {
     #vid {
         div {
             width: 100%;
@@ -47,23 +47,6 @@ app-client-question {
                     // flex: 1;
                     // display: none;
                     flex-shrink: 0;
-                }
-                .vjs-control-bar {
-                    background-color: transparent;
-                    margin-top: 40vh;
-                    // height: 100%;
-                    position: inherit;
-                    color: red;
-                    flex-direction: column;
-                    flex-grow: 1;
-                    // flex: auto;
-                    // flex-grow: 1;
-                    // .vjs-play-control {
-                    //     display: none;
-                    // }
-                    .vjs-play-control {
-                        margin-right: 78vw;
-                    }
                 }
             }
         }
@@ -78,6 +61,69 @@ app-client-question {
     .sender > .mat-fab {
         margin-right: 52vw;
         // right: 95vw;
+    }
+}
+.videoOver {
+    @extend %overSettings;
+    #vid {
+        div {
+            div {
+                .vjs-control-bar {
+                    background-color: transparent;
+                    margin-top: 40vh;
+                    // min-width: 25px;
+                    // height: 100%;
+                    position: inherit;
+                    color: black;
+                    flex-direction: column;
+                    flex-grow: 1;
+                    // flex: auto;
+                    // flex-grow: 1;
+                    // .vjs-play-control {
+                    //     display: none;
+                    // }
+                    .vjs-play-control {
+                        margin-right: 78vw;
+                    }
+                }
+            }
+        }
+    }
+}
+.mobileOver {
+    @extend %overSettings;
+    @extend .videoOver;
+    .starter {
+        top: 3vw;
+        .mat-fab {
+            margin-right: 3vw;
+        }
+    }
+    .sender > .mat-fab {
+        margin-right: 3vw;
+    }
+    .vjs-play-control {
+        margin-right: 3vw !important;
+    }
+    .vjs-control-bar {
+        color: white !important;
+    }
+    %times {
+        position: absolute;
+        width: auto !important;
+        top: 5pt;
+    }
+    .vjs-current-time {
+        @extend %times;
+        right: 70pt !important;
+    }
+    .vjs-time-divider {
+        @extend %times;
+        right: 50pt !important;
+    }
+    .vjs-duration {
+        @extend %times;
+        right: 5pt !important;
     }
 }
 .width-100 {
@@ -115,14 +161,14 @@ app-client-question {
     transition: right 500ms;
 }
 
-
 /* change player background color */
 // .video-js video {
 //   background-color: #42f489;
 //   background-color: blue;
 // }
 $a: 100%;
-.vjs-fluid, .vjs-tech {
+.vjs-fluid,
+.vjs-tech {
     padding-top: 0 !important;
 }
 #video_1 {
@@ -167,9 +213,18 @@ video.vjs-tech {
     border: none;
     cursor: pointer;
 }
-.vjs-poster, .vjs-progress-control, .vjs-playback-rate, .vjs-text-track-display,
-.vjs-chapters-button, .vjs-descriptions-button, .vjs-subs-caps-button,
-.vjs-modal-dialog, .vjs-audio-button, .vjs-seek-to-live-control, .vjs-animation-display, .vjs-record-canvas {
+.vjs-poster,
+.vjs-progress-control,
+.vjs-playback-rate,
+.vjs-text-track-display,
+.vjs-chapters-button,
+.vjs-descriptions-button,
+.vjs-subs-caps-button,
+.vjs-modal-dialog,
+.vjs-audio-button,
+.vjs-seek-to-live-control,
+.vjs-animation-display,
+.vjs-record-canvas {
     display: none;
 }
 .vjs-hidden {
@@ -212,7 +267,6 @@ video.vjs-tech {
     background-color: #00000009;
     color: white;
     .vjs-current-time {
-        left: 50px;
         display: inline;
         flex: 2;
         // padding: 10px 0;

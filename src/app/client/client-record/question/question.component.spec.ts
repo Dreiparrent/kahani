@@ -5,7 +5,12 @@ import { FirebaseService } from 'src/app/firebase/firebase.service';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { QuestionComponent } from './question.component';
-import { StubMaterialModule } from 'src/app/firebase/material.stub';
+import { MaterialStubModule } from 'src/app/firebase/material.stub';
+
+class mockUserData {
+    name = 'name';
+    email = 'email';
+}
 
 describe('QuestionComponent', () => {
     let component: QuestionComponent;
@@ -14,10 +19,10 @@ describe('QuestionComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [QuestionComponent],
-            imports: [StubMaterialModule],
+            imports: [MaterialStubModule],
             providers: [
                 { provide: FirebaseService, useValue: mockFirebase },
-                { provide: AngularFireStorage, useValue: mockAngularFireStorage }
+                { provide: AngularFireStorage, useValue: mockAngularFireStorage },
             ]
         }).compileComponents();
     }));
@@ -25,6 +30,8 @@ describe('QuestionComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(QuestionComponent);
         component = fixture.componentInstance;
+        const expectedUserData = { name: 'name', email: 'email' };
+        component.userData = expectedUserData;
         fixture.detectChanges();
     });
 

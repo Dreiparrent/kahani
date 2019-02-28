@@ -7,8 +7,8 @@ import { BehaviorSubject, Subject } from 'rxjs';
 export class ResizeService {
 
     // size = new BehaviorSubject({ innerwidth: 0, innerHeight: 0 });
-    window = new Subject<Window>();
-    _windowUpdate: Window;
+    public window = new Subject<Window>();
+    private _windowUpdate: Window;
     public recordDevice: MediaDeviceInfo;
     get windowUpdate() {
         return this._windowUpdate;

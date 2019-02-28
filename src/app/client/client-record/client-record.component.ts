@@ -56,6 +56,7 @@ export class ClientRecordComponent implements OnInit {
     deviceList: MediaDeviceInfo[] = [];
     public videoDevice = '';
     public audioDevice = '';
+    buttonPosition = '-30vw';
     get config(): playConfig {
         return {
             autoplay: true,
@@ -118,7 +119,7 @@ export class ClientRecordComponent implements OnInit {
         //     // console.log(vid.getAttribute('aspectRatio'));
         // });
         this.resizeService.window.subscribe(w => {
-            this.setOver();
+            this.isOver();
         });
         this.player = new Recorder(this.outer.nativeElement, 1, this.config, {
             record: this.recordButton.nativeElement,
@@ -143,11 +144,10 @@ export class ClientRecordComponent implements OnInit {
         if (initial) {
             const sendData: IDialogData = {
                 devices: this.deviceList, updating: change,
-                userQuestions: this.firebase.testClientConfig.userQuestions,
+                userQuestions: this.firebase.clientConfig.userQuestions,
             };
-            if (this.firebase.testClientConfig.extraQuestions)
-                sendData.extraQuestions = this.firebase.testClientConfig.extraQuestions;
-            console.log(sendData, this.firebase.testClientConfig);
+            if (this.firebase.clientConfig.extraQuestions)
+                sendData.extraQuestions = this.firebase.clientConfig.extraQuestions;
             const dialogRef = this.dialog.open<PrerecordComponent<IBaseUserData>, IDialogData, IPreOutput<IBaseUserData>>(
                 PrerecordComponent, {
                     disableClose: true,
@@ -159,11 +159,11 @@ export class ClientRecordComponent implements OnInit {
                 this.player.destroy();
                 this.player.init(this.config);
                 this.userData = result.userDetails;
-                this.firebase.testClientConfig.userQuestions.map(q => {
+                this.firebase.clientConfig.userQuestions.map(q => {
                     q.value = result.userDetails[q.key];
                 });
                 if (result.extraDetails)
-                    this.firebase.testClientConfig.extraQuestions.map(q => {
+                    this.firebase.clientConfig.extraQuestions.map(q => {
                         q.value = result.extraDetails[q.key];
                     });
             });
@@ -177,8 +177,9 @@ export class ClientRecordComponent implements OnInit {
     }
 
     deviceReady() {
-        if (!this.recordInit)
-            this.setOver();
+        if (!this.recordInit) {
+            this.isOver();
+        }
         this.startPopup.nativeElement.style.display = 'block';
         this.startPopup.nativeElement.style.right =
             this.spinner.nativeElement.style.right =
@@ -198,14 +199,14 @@ export class ClientRecordComponent implements OnInit {
 
     startRecord() {
         this.startPopup.nativeElement.style.display = 'none';
-        this.sendPopup.nativeElement.style.right = this.question.isOverlay ? '30vw' : '-30vw';
+        this.sendPopup.nativeElement.style.right = this.buttonPosition;
         this.startPopup.nativeElement.style.transform = 'translate(-50%)';
         let reset = true;
         this._recordProgress = 3;
         this.spinnerProgress = 100;
         const playButton = document.getElementsByClassName('vjs-play-control')[0] as HTMLDivElement;
         if (playButton)
-            playButton.style.right = this.question.isOverlay ? '30vw' : '-30vw';
+            playButton.style.right = this.buttonPosition;
         if (environment.recorder.countdown.skip) {
             if (environment.recorder.countdown.start) {
                 this.startPopup.nativeElement.style.display = 'block';
@@ -250,7 +251,7 @@ export class ClientRecordComponent implements OnInit {
         }
     }
 
-    setOver() {
+    isOver() {
         if (this.recordInit)
             this.deviceReady();
         const videoElem = document.getElementById('video_1');
@@ -258,14 +259,34 @@ export class ClientRecordComponent implements OnInit {
             'vjs-control-bar'
         ) as HTMLCollectionOf<HTMLElement>;
         const videoPlayer = document.getElementsByTagName('video');
-        if (this.question.isOverlay && controlBar[0].clientWidth > 250) {
-            this.question.isOverlay = false;
-            this.vidSec.nativeElement.className = '';
-        } else if (!this.question.isOverlay && this.question.shouldOverlay) {
-            this.question.isOverlay = true;
-            this.vidSec.nativeElement.className = 'videoOver';
-        }
+        this._testOver(controlBar[0]);
         this.startPopup.nativeElement.style.right = '3vw';
-        this.sendPopup.nativeElement.style.right = this.question.isOverlay ? '30vw' : '-30vw';
+        if (!this.recordInit)
+            this._testOver(controlBar[0]);
+        this.sendPopup.nativeElement.style.right = this.buttonPosition;
+        // this._setOver(controlBar[0]);
+        // this.vidSec.nativeElement.className = this._setOver(controlBar[0]);
+    }
+    private _testOver(controlBar: HTMLElement) {
+        if (!this.question.isOverlay && this.question.shouldOverlay) {
+            this._setOver(controlBar, true);
+        } else if (this.question.isOverlay) {
+            this._setOver(controlBar);
+        }
+    }
+    private _setOver(controlBar: HTMLElement, shouldOverlay = false) {
+        let className = '';
+        let right = '-30vw';
+        if (controlBar.clientWidth < 35) {
+            className = 'mobileOver';
+            shouldOverlay = true;
+        } else if (controlBar.clientWidth < 250) {
+            right = '30vw';
+            className = 'videoOver';
+            shouldOverlay = true;
+        }
+        this.question.isOverlay = shouldOverlay;
+        this.buttonPosition = right;
+        this.vidSec.nativeElement.className = className;
     }
 }

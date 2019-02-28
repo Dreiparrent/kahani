@@ -1,4 +1,4 @@
-import { QuestionBase } from './../shared/forms/question-base';
+import { QuestionBase, TextboxQuestion, DropdownQuestion } from './../shared/forms/question-base';
 export class ClientConfig implements ClientConfigBase {
     name: string;
     head: IClientText;
@@ -61,3 +61,68 @@ export interface IBaseUserData {
     email: string;
     name: string;
 }
+
+
+export const testConfig: ClientConfigBase = {
+    name: 'Project X-ITE',
+    head: {
+        hasImg: true,
+        content: '/assets/Project-X-ITE.png',
+        config: {
+            fontName: 'Calibri',
+            fontSize: 24
+        },
+        style: ''
+    },
+    subhead: {
+        hasImg: false,
+        content: 'YOU HAVE GREAT STORIES. AND WE WANT TO HEAR THEM.',
+        config: {
+            fontName: 'Calibri',
+            fontSize: 21
+        },
+        style: ''
+    },
+    link: {
+        content: '',
+        config: {
+            fontName: 'Calibri',
+            fontSize: 24
+        },
+        style: ''
+    },
+    hasImg: true,
+    hasVideo: true,
+    questions: [{ text: 'Question 1', length: 60 }, { text: 'Question 2', length: 60 }, { text: 'Question 3', length: 60 }],
+    userQuestions: [
+        new TextboxQuestion({
+            key: 'name',
+            label: 'Name',
+            required: true,
+            order: 1
+        }),
+        new TextboxQuestion({
+            key: 'email',
+            label: 'email',
+            required: true,
+            order: 2,
+            type: 'email'
+        })
+    ],
+    extraQuestions: [
+        new DropdownQuestion({
+            key: 'extra',
+            label: 'extra',
+            order: 3,
+            required: false,
+            options: [
+                {
+                    key: 'o1', value: 'o1'
+                },
+                {
+                    key: 'o2', value: '02'
+                }
+            ]
+        })
+    ]
+};

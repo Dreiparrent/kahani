@@ -11,6 +11,7 @@ export class QuestionComponent implements OnInit {
     @Input() userData: IBaseUserData;
     @ViewChild('outer') outer: ElementRef<HTMLDivElement>;
     questions: string[] = [];
+    name: string;
     @Output() details: EventEmitter<boolean> = new EventEmitter();
 
     get shouldOverlay() {
@@ -27,7 +28,8 @@ export class QuestionComponent implements OnInit {
     }
 
     constructor(private firebase: FirebaseService) {
-        this.questions = firebase.testClientConfig.questions.map(q => q.text);
+        this.questions = firebase.clientConfig.questions.map(q => q.text);
+        this.name = firebase.clientConfig.name;
     }
 
     ngOnInit() {}

@@ -3,15 +3,15 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "prestart": "firebase use dev",
     "start": "ng serve",
     "build": "ng build",
-    "prebuildp": "firebase use prod",
     "builp": "ng build --prod --statsJson=true",
     "postbuilp": "webpack-bundle-analyzer dist/stats.json",
-    "test": "ng test",
+    "test": "ng test --browsers=ChromeHeadless",
     "lint": "ng lint",
-    "e2e": "ng e2e",
+    "e2e": "ng e2e --protractor-config=e2e/protractor-ci.conf.js --port=8080",
+    "e2e-app": "ng e2e --protractor-config=e2e/protractor-ci.conf.js --port=8080 --suite app",
+    "e2e-client": "ng e2e --protractor-config=e2e/protractor-ci.conf.js --port=8080 --suite client",
     "an": "wwebpack-bundle-analyzer"
   },
   "private": true,
@@ -63,6 +63,7 @@
     "protractor": "~5.4.0",
     "terser": "^3.14.1",
     "ts-node": "~7.0.0",
+    "tsconfig-paths": "^3.8.0",
     "tslint": "~5.11.0",
     "typescript": "~3.2.2",
     "webpack-bundle-analyzer": "^3.0.3"

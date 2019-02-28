@@ -1,5 +1,5 @@
 import { AngularFireStorage } from '@angular/fire/storage';
-import { StubMaterialModule } from './../../firebase/material.stub';
+import { MaterialStubModule } from './../../firebase/material.stub';
 import { QuestionComponent } from './../client-record/question/question.component';
 // import { firebase, mockAngularFireStorage } from './../../firebase/firebase.service.spy';
 import { FirebaseService } from './../../firebase/firebase.service';
@@ -23,7 +23,7 @@ describe('ClientHomeComponent', () => {
             imports: [
                 RouterTestingModule,
                 FormsModule,
-                StubMaterialModule
+                MaterialStubModule
             ],
             providers: [
                 { provide: FirebaseService, useValue: mockFirebase },

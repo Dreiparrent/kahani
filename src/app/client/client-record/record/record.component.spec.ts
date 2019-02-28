@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RecordComponent } from './record.component';
-import { StubMaterialModule } from 'src/app/firebase/material.stub';
+import { MaterialStubModule } from 'src/app/firebase/material.stub';
 import { FirebaseService } from 'src/app/firebase/firebase.service';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { mockFirebase, mockAngularFireStorage } from 'src/app/firebase/firebase.service.spy';
@@ -13,7 +13,7 @@ describe('RecordComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [RecordComponent],
-            imports: [StubMaterialModule],
+            imports: [MaterialStubModule],
             providers: [
                 { provide: FirebaseService, useValue: mockFirebase },
                 { provide: AngularFireStorage, useValue: mockAngularFireStorage }

@@ -51,3 +51,5 @@ src/environments/environment.prod.ts
 /*.rules
 src/assets
 /.firebase
+/**/e2e-chrome-profile
+/e2e/screen-shots

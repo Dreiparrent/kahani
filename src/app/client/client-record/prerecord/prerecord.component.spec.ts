@@ -1,30 +1,42 @@
+import { QuestionControlService } from './../../../shared/forms/question-control.service';
+import { FormGroup, Validators, FormControl } from '@angular/forms';
+import { environment } from 'src/environments/environment';
+import { QuestionBase } from './../../../shared/forms/question-base';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PrerecordComponent, IDialogData } from './prerecord.component';
 import {
-    StubMaterialModule,
-    StubMatDialogRef
+    MaterialStubModule,
+    MatDialogRefStub
 } from 'src/app/firebase/material.stub';
-import { InjectionToken, Component } from '@angular/core';
+import { InjectionToken, Component, Input } from '@angular/core';
 
-const testData = {
+const testData: IDialogData = {
     devices: [],
-    updating: false
+    updating: false,
+    userQuestions: environment.clientConfig.userQuestions,
+    extraQuestions: environment.clientConfig.extraQuestions
 };
 
+@Component({ selector: 'app-dynamic-form', template: '' })
+class DynamicFormStubComponent<T> {
+    @Input() questions: QuestionBase<T>[];
+    form = new QuestionControlService().toFormGroup(environment.clientConfig.userQuestions);
+}
+
 describe('PrerecordComponent', () => {
-    let component: PrerecordComponent;
+    let component: PrerecordComponent<any>;
     // component.data = testData;
-    let fixture: ComponentFixture<PrerecordComponent>;
+    let fixture: ComponentFixture<PrerecordComponent<any>>;
     const data = testData;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [PrerecordComponent],
-            imports: [StubMaterialModule],
+            declarations: [PrerecordComponent, DynamicFormStubComponent],
+            imports: [MaterialStubModule],
             providers: [
-                { provide: MatDialogRef, useClass: StubMatDialogRef },
+                { provide: MatDialogRef, useClass: MatDialogRefStub },
                 { provide: MAT_DIALOG_DATA, useValue: testData },
             ],
         }).compileComponents();
@@ -33,6 +45,7 @@ describe('PrerecordComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(PrerecordComponent);
         component = fixture.componentInstance;
+        // component.userForm = component.
         fixture.detectChanges();
     });
 

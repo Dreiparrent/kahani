@@ -41,16 +41,18 @@ export class PrerecordComponent<T> implements OnInit {
         });
         if (data.extraQuestions)
             this.extraQuestions = data.extraQuestions;
-        if (this.videoDevices.filter(d => {
-            if (d.label !== '')
-                return d.label;
-        }).length < 1)
-            alert('Cannot get video devices (proper popup coming soon)');
-        if (this.audioDevices.filter(d => {
-            if (d.label !== '')
-                return d.label;
-        }).length < 1)
-            alert('Cannot get audio devices (proper popup coming soon)');
+        if (!environment.recorder.deviceAlert.skip) {
+            if (this.videoDevices.filter(d => {
+                if (d.label !== '')
+                    return d.label;
+            }).length < 1)
+                alert('Cannot get video devices (proper popup coming soon)');
+            if (this.audioDevices.filter(d => {
+                if (d.label !== '')
+                    return d.label;
+            }).length < 1)
+                alert('Cannot get audio devices (proper popup coming soon)');
+        }
     }
 
     ngOnInit() { }

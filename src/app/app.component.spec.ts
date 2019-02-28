@@ -8,23 +8,29 @@ import {
 } from '@angular/material';
 import { FirebaseService } from 'src/app/firebase/firebase.service';
 import { ResizeService } from 'src/app/resize/resize.service';
-import { TestDashComponent } from './test-dash/test-dash.component';
 import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { StubMaterialModule } from './firebase/material.stub';
+import { MaterialStubModule } from './firebase/material.stub';
+import { Component } from '@angular/core';
 
+/* tslint:disable*/
+@Component({ selector: 'app-test-dash', template: '' })
+class TestDashStubComponent { }
+@Component({ selector: 'app-version', template: '' })
+class VersionStubComponent {}
+/* tslint:enable*/
 describe('AppComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [
                 RouterTestingModule,
                 BrowserAnimationsModule,
-                StubMaterialModule
+                MaterialStubModule
             ],
-            declarations: [AppComponent, TestDashComponent],
+            declarations: [AppComponent, TestDashStubComponent, VersionStubComponent],
             providers: [FirebaseService, ResizeService]
         }).compileComponents();
     }));
