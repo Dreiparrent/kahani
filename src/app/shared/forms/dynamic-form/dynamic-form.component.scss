@@ -1,0 +1,8 @@
+form {
+    display: flex;
+    flex-wrap: wrap;
+    app-question {
+        flex-shrink: 0;
+        width: 100%;
+    }
+}

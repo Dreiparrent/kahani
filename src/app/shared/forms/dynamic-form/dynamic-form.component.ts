@@ -27,4 +27,12 @@ export class DynamicFormComponent<T> implements OnInit {
     get data(): T {
         return this.form.value;
     }
+
+    shouldHide(question: QuestionBase<any>) {
+        if (question.dependent) {
+            const depVal = this.questions.find(q => q.key === question.dependent.key).value;
+            return depVal === question.dependent.value;
+        }
+        return true;
+    }
 }

@@ -5,6 +5,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { QuestionControlService } from './question-control.service';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule, MatInputModule, MatSelectModule } from '@angular/material';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 @NgModule({
     declarations: [
@@ -17,7 +18,8 @@ import { MatFormFieldModule, MatInputModule, MatSelectModule } from '@angular/ma
         ReactiveFormsModule,
         MatFormFieldModule,
         MatInputModule,
-        MatSelectModule
+        MatSelectModule,
+        ColorPickerModule
     ],
     providers: [
         QuestionControlService

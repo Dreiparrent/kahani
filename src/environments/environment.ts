@@ -1,4 +1,4 @@
-import { testConfig } from 'src/app/firebase/constatnts';
+import { testConfig, testClient } from 'src/app/shared/firebase/constatnts';
 
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
@@ -12,6 +12,10 @@ const videoDevices =
         '71c5b114b28f2e7d4430803a8b120ef972f1d4877cfe50a2a1a3764a63a3225b'];
 export const environment = {
     production: false,
+    routing: {
+        redirect: true,
+        link: 'dash'
+    },
     tosAccept: true,
     recorder: {
         popup: {
@@ -40,9 +44,14 @@ export const environment = {
         messagingSenderId: '355817783626'
     },
     clientConfig: testConfig,
+    campaignConfig: testClient,
+    dash: {
+        openCampaign: true,
+        campaign: testConfig
+    },
     version: {
         includeVersion: false,
-        version: '0.1.2'
+        version: '0.2.1'
     },
 }
 /*

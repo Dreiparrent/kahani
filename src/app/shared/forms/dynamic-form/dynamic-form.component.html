@@ -1,7 +1,8 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="form">
 
     <ng-container *ngFor="let question of questions" class="form-row">
-        <app-question [question]="question" [form]="form"></app-question>
+        <app-question [ngStyle]="{'display': !shouldHide(question) ? 'none' : 'block'}"
+            [question]="question" [form]="form"></app-question>
     </ng-container>
 
     <!-- <div class="form-row">

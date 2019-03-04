@@ -1,5 +1,5 @@
 import { FormGroup } from '@angular/forms';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { QuestionBase, QuestionType } from '../question-base';
 
 @Component({
@@ -7,7 +7,7 @@ import { QuestionBase, QuestionType } from '../question-base';
   templateUrl: './dynamic-form-question.component.html',
   styleUrls: ['./dynamic-form-question.component.scss']
 })
-export class DynamicFormQuestionComponent {
+export class DynamicFormQuestionComponent implements OnInit {
     @Input() question: QuestionBase<any>;
     @Input() form: FormGroup;
     questionType = QuestionType;
@@ -17,5 +17,9 @@ export class DynamicFormQuestionComponent {
     // type: string;
     constructor() {
         // this.type = this.question.controlType
+    }
+
+    ngOnInit() {
+        // if (this.question.dependent)
     }
 }

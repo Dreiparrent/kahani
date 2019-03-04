@@ -1,11 +1,14 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { TestDashComponent } from './test-dash/test-dash.component';
-import { ClientComponent } from './client/client.component';
+import { ClientComponent } from './components/client/client.component';
 
 const routes: Routes = [
     {
-        path: '**',
+        path: 'dash',
+        loadChildren: './components/dash/dash.module#DashModule'
+    },
+    {
+        path: '',
         component: ClientComponent
     }
 ];

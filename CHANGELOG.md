@@ -13,3 +13,5 @@
 * **Resize Support:** The record page properly resizes
 * **Full Screen Design:** The page uses all space based on the size of the recording element
 * **Time Removal:** The time indicator has been redesigned so that it's not so intrusive
+
+## [0.2.0](https://github.com/dreiparrent/kahani/compare/0.1.2...0.2.0) (02-27-2019)
