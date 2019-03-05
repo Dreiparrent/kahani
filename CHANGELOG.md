@@ -17,10 +17,11 @@
 #### Hidden Features
 * **Dash Page:** Because there is no "button," can be found [here](https://kahani.aparrent.com/dash)
 * **Clients Nav:** Can be accessed by clicking "CLIENT" in header or by clicking any far-left edge of dash
+* **Notes:** ctrl + right and ctrl + left change note level (not tested on mac)
 * **Details:** Opened/Closed though "Edit" in each campaign card. Also closed by clicking campaign name sub-header
 * **Details Folding:** Clicking the text "Content," "Themes," or "Responses" folds the details
 
-## Performance Improvements
+### Performance Improvements
 * **Lazy Loading/Chunks:** Each client page is ~1mb. Dash is ~200kb.
 
 ### Bug Fixes

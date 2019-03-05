@@ -13,7 +13,7 @@ export const mockFirebase: Partial<FirebaseService> = {
     uploadRecord: (blob: Blob) => {
         return;
     },
-    clientConfig: new ClientConfig(environment.clientConfig),
+    // clientConfig: new ClientConfig(environment),
 };
 export const mockAngularFireStorage = {
     ref: () =>  ''
