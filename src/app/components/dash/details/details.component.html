@@ -1,0 +1,75 @@
+<!-- <mat-toolbar color="accent">
+    <h2 class="display-2" (click)="openAll = !openAll">{{campaign?.name}}</h2>
+</mat-toolbar> -->
+<mat-tab-group  mat-align-tabs="end" color="primary" backgroundColor="accent" [selectedIndex]="1" mat-stretch-tabs>
+    <mat-tab disabled>
+        <ng-template mat-tab-label>
+            <h2 class="display-2" style="color: white !important;" (click)="closeDetails()">Project X-ITE</h2>
+        </ng-template>
+    </mat-tab>
+    <mat-tab #contentTab>
+        <ng-template mat-tab-label><div (click)="openAll = contentTab.isActive ? !openAll : openAll">Content</div></ng-template>
+        <mat-accordion [multi]="true">
+            <mat-expansion-panel *ngFor="let detail of details; index as i" [expanded]="openAll">
+                <!-- <h2>{{detailType[i]}}</h2> -->
+                <mat-expansion-panel-header>
+
+                    <mat-panel-title>
+                        {{detailType[i]}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <app-dynamic-form *ngIf="i < detailType.Questions; else reorderTemplate" [questions]="detail">
+                </app-dynamic-form>
+                <ng-template #reorderTemplate>
+                    <div cdkDropList (cdkDropListDropped)="drop($event, i)">
+                        <mat-card *ngFor="let q of detail; index as j" cdkDrag>
+                            <app-dynamic-form [questions]="q"></app-dynamic-form>
+                            <mat-card-actions>
+                                <button mat-button (click)="remove(i,j)">Remove</button>
+                            </mat-card-actions>
+                        </mat-card>
+                    </div>
+                    <mat-card-actions align="end">
+                        <button mat-button (click)="add(i)">Add</button>
+                    </mat-card-actions>
+                </ng-template>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </mat-tab>
+    <mat-tab #themeTab>
+        <ng-template mat-tab-label>
+            <div (click)="openAll = themeTab.isActive ? !openAll : openAll">Theme</div>
+        </ng-template>
+        <mat-accordion [multi]="true">
+            <mat-expansion-panel *ngFor="let detail of themes; index as i" [expanded]="openAll" [ngStyle]="getStyle(i)">
+                <!-- <h2>{{detailType[i]}}</h2> -->
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        {{themeType[i]}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <app-dynamic-form [questions]="detail"></app-dynamic-form>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </mat-tab>
+    <mat-tab #responseTab>
+        <ng-template mat-tab-label>
+            <div (click)="openAll = responseTab.isActive ? !openAll : openAll">Responses</div>
+        </ng-template>
+        <mat-accordion [multi]="true">
+            <mat-expansion-panel [expanded]="openAll" *ngFor="let q of details[detailType.Questions]">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        {{q[1].value}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-card>
+                    Videos
+                </mat-card>
+                <mat-card>
+                    Some stats or something
+                </mat-card>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </mat-tab>
+</mat-tab-group>

@@ -16,7 +16,7 @@ export class ClientHomeComponent implements OnInit, OnDestroy {
     public TOS = environment.tosAccept;
 
     constructor(private firebaseService: FirebaseService) {
-        this.client = firebaseService.testClientConfig;
+        this.client = firebaseService.clientConfig;
     }
 
     ngOnInit() {
@@ -25,7 +25,7 @@ export class ClientHomeComponent implements OnInit, OnDestroy {
             this.bgVideo.nativeElement.play().catch(error => {
                 console.error(error);
             });
-        }, 1000);
+        }, 2000);
     }
 
     ngOnDestroy(): void {

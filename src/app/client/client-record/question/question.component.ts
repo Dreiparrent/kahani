@@ -1,14 +1,17 @@
 import { FirebaseService } from './../../../firebase/firebase.service';
-import { Component, OnInit, HostListener, AfterViewChecked, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, HostListener, AfterViewChecked, ViewChild, ElementRef, Output, EventEmitter, Input } from '@angular/core';
+import { IBaseUserData } from 'src/app/firebase/constatnts';
 
 @Component({
-    selector: 'app-question',
+    selector: 'app-client-question',
     templateUrl: './question.component.html',
     styleUrls: ['./question.component.scss'],
 })
 export class QuestionComponent implements OnInit {
+    @Input() userData: IBaseUserData;
     @ViewChild('outer') outer: ElementRef<HTMLDivElement>;
     questions: string[] = [];
+    name: string;
     @Output() details: EventEmitter<boolean> = new EventEmitter();
 
     get shouldOverlay() {
@@ -25,7 +28,8 @@ export class QuestionComponent implements OnInit {
     }
 
     constructor(private firebase: FirebaseService) {
-        this.questions = firebase.testClientConfig.questions.map(q => q.text);
+        this.questions = firebase.clientConfig.questions.map(q => q.text);
+        this.name = firebase.clientConfig.name;
     }
 
     ngOnInit() {}

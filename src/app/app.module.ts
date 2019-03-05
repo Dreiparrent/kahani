@@ -1,3 +1,5 @@
+import { DashModule } from './components/dash/dash.module';
+import { KahaniFormsModule } from './shared/forms/forms.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
@@ -7,28 +9,29 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularFireModule } from '@angular/fire';
-import { TestDashComponent } from './test-dash/test-dash.component';
 import { MatGridListModule, MatCardModule, MatMenuModule, MatIconModule, MatButtonModule, MatSidenavModule } from '@angular/material';
 import { LayoutModule } from '@angular/cdk/layout';
-import { ClientModule } from './client/client.module';
-import { FirebaseService } from './firebase/firebase.service';
-import { ResizeService } from './resize/resize.service';
+import { ClientModule } from './components/client/client.module';
+import { FirebaseService } from './shared/firebase/firebase.service';
+import { ResizeService } from './shared/resize/resize.service';
 import { AngularFireStorageModule } from '@angular/fire/storage';
-import { VersionComponent } from './version/version.component';
+import { VersionComponent } from './components/version/version.component';
+import { SidenavComponent } from './layouts/sidenav/sidenav.component';
+import { SidenavService } from './layouts/sidenav/sidenav.service';
 
 @NgModule({
     declarations: [
         AppComponent,
-        TestDashComponent,
-        VersionComponent
+        VersionComponent,
+        SidenavComponent
     ],
     imports: [
         ClientModule,
+        DashModule,
         BrowserModule,
         BrowserAnimationsModule,
         AppRoutingModule,
         ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
-        BrowserAnimationsModule,
         AngularFireModule.initializeApp(environment.firebase),
         AngularFireStorageModule,
         MatGridListModule,
@@ -37,11 +40,13 @@ import { VersionComponent } from './version/version.component';
         MatIconModule,
         MatButtonModule,
         LayoutModule,
-        MatSidenavModule
+        MatSidenavModule,
+        KahaniFormsModule,
     ],
     providers: [
         FirebaseService,
         ResizeService,
+        SidenavService
     ],
     bootstrap: [AppComponent]
 })

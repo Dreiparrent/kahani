@@ -1,17 +1,19 @@
+import { environment } from 'src/environments/environment';
+import { DropdownQuestion } from './../shared/forms/question-base';
 import { Injectable } from '@angular/core';
-import { ClientConfig, ClientConfigBasse } from './constatnts';
+import { ClientConfig, ClientConfigBase } from './constatnts';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
+import { TextboxQuestion } from '../shared/forms/question-base';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FirebaseService {
 
-    public testClientConfig: ClientConfig;
+    public clientConfig: ClientConfig;
     private storgageRef: AngularFireStorageReference;
     constructor(private storage: AngularFireStorage) {
-        this.testClientConfig = new ClientConfig(testConfig.name, testConfig.head,
-            testConfig.subhead, testConfig.link, testConfig.hasImg, testConfig.hasVideo, testConfig.questions);
+        this.clientConfig = new ClientConfig(environment.clientConfig);
         this.storgageRef = this.storage.ref('/projectxite/testVideo');
     }
 
@@ -21,35 +23,3 @@ export class FirebaseService {
         }, error => console.log(error));
     }
 }
-export const testConfig: ClientConfigBasse = {
-    name: 'Project X-ITE',
-    head: {
-        hasImg: true,
-        content: '/assets/Project-X-ITE.png',
-        config: {
-            fontName: 'Calibri',
-            fontSize: 24
-        },
-        style: ''
-    },
-    subhead: {
-        hasImg: false,
-        content: 'YOU HAVE GREAT STORIES. AND WE WANT TO HEAR THEM.',
-        config: {
-            fontName: 'Calibri',
-            fontSize: 21
-        },
-        style: ''
-    },
-    link: {
-        content: '',
-        config: {
-            fontName: 'Calibri',
-            fontSize: 24
-        },
-        style: ''
-    },
-    hasImg: true,
-    hasVideo: true,
-    questions: [{ text: 'Question 1', length: 60 }, { text: 'Question 2', length: 60 }, { text: 'Question 3', length: 60 }]
-};

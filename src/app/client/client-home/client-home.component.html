@@ -1,4 +1,4 @@
-<section>
+<section class="mat-typography">
     <div id="bg">
         <video #bgVideo poster="/assets/GC.png">
             <source src="/assets/GC.mp4" type="video/mp4">
@@ -17,7 +17,7 @@
         <div id="subtitle">
             <h2>{{client.subhead.content}}</h2>
         </div>
-        <h4 id="tos">I agree to the <a [routerLink]="'/tos'">TOS</a><input [(ngModel)]="TOS" type="checkbox" /></h4>
+        <label><h4 id="tos">I agree to the <a [routerLink]="'/tos'">TOS</a><input [(ngModel)]="TOS" type="checkbox" /></h4></label>
         <a id="pager" [routerLink]="[ '/record']" [style.pointer-events]="TOS ?'auto':'none'">&or;</a>
     </div>
 </section>

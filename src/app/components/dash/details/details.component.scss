@@ -1,0 +1,28 @@
+h2 {
+    padding: 15px;
+    cursor: pointer;
+}
+mat-accordion {
+    overflow: visible;
+}
+mat-expansion-panel {
+    // margin: 1px 0;
+    overflow: visible;
+    padding: 0 5px;
+    mat-card {
+        margin: 5px 0;
+    }
+    app-dynamic-form {
+        form {
+            display: flex !important;
+            flex-wrap: wrap;
+            app-question {
+                // flex: 1;
+                min-width: 70% !important;
+            }
+        }
+    }
+}
+.mat-tab-disabled {
+    color: white !important;
+}

@@ -1,3 +1,5 @@
+import { testConfig, testClient } from 'src/app/shared/firebase/constatnts';
+
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
@@ -10,6 +12,10 @@ const videoDevices =
         '71c5b114b28f2e7d4430803a8b120ef972f1d4877cfe50a2a1a3764a63a3225b'];
 export const environment = {
     production: false,
+    routing: {
+        redirect: true,
+        link: 'dash'
+    },
     tosAccept: true,
     recorder: {
         popup: {
@@ -17,11 +23,14 @@ export const environment = {
             autoOpenExtra: true,
         },
         countdown: {
-            skip: true,
-            start: true
+            start: true,
+            skip: true
         },
         upload: {
             skip: true
+        },
+        deviceAlert: {
+            skip: false
         },
         videoDevice: videoDevices[VideoDevices.rear],
         buttonColor: 'white',
@@ -34,12 +43,17 @@ export const environment = {
         storageBucket: 'kahani-dev.appspot.com',
         messagingSenderId: '355817783626'
     },
+    clientConfig: testConfig,
+    campaignConfig: testClient,
+    dash: {
+        openCampaign: true,
+        campaign: testConfig
+    },
     version: {
         includeVersion: false,
-        version: '0.1.2'
-    }
-};
-
+        version: '0.2.1'
+    },
+}
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

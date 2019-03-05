@@ -1,0 +1,11 @@
+<mat-sidenav-container class="mat-typography">
+    <mat-sidenav #sidenav mode="side">
+        <!-- <app-sidenav class="mat-typography"></app-sidenav> -->
+        <router-outlet name="nav"></router-outlet>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container>
+<!-- <button mat-mini-fab (click)="sidenav.toggle()">Toggle drawer</button> -->
+<div id="sideToggle" (click)="sidenav.toggle()"></div>
