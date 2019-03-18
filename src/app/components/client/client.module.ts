@@ -3,22 +3,19 @@ import { CommonModule } from '@angular/common';
 
 import { ClientRoutingModule } from './client-routing.module';
 import { ClientComponent } from './client.component';
-import { ClientHomeComponent } from './client-home/client-home.component';
-import { TosComponent } from './tos/tos.component';
-import { KahaniFormsModule } from 'src/app/shared/forms/forms.module';
-
+import { ClientGuardService, ClientPathMatcher, VideoGuardService } from './client-guard.service';
+import { MatToolbarModule, MatCardModule } from '@angular/material';
+import { HomeComponent } from './home/home.component';
+import { VideosComponent } from './videos/videos.component';
 
 @NgModule({
-    declarations: [
-        ClientComponent,
-        ClientHomeComponent,
-        TosComponent
-    ],
+    declarations: [ClientComponent, HomeComponent, VideosComponent],
     imports: [
         CommonModule,
-        KahaniFormsModule,
-        ClientRoutingModule
+        ClientRoutingModule,
+        MatCardModule,
+        MatToolbarModule
     ],
-    bootstrap: [ClientComponent]
+    providers: [ClientGuardService, VideoGuardService, ClientPathMatcher]
 })
-export class ClientModule { }
+export class ClientModule {}

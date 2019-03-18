@@ -5,12 +5,15 @@
     <section cdkDropList>
         <mat-card>
             <!-- <mat-card-header> -->
-                <mat-card-title>{{client.name}}</mat-card-title>
+                <mat-card-title>{{(client | async)?.name}}</mat-card-title>
                 <mat-card-subtitle>Client Details</mat-card-subtitle>
             <!-- </mat-card-header> -->
                 <mat-card-content>
-                    <p *ngFor="let con of contact">{{con}}</p>
+                    <p *ngFor="let con of contact | async">{{con}}</p>
                 </mat-card-content>
+                <mat-card-actions align="end">
+                    <a mat-button rout [href]="'/client/' +  getClient()">Client</a>
+                </mat-card-actions>
             <!-- <mat-card-footer>Footer</mat-card-footer> -->
             <!-- <mat-card-actions align="end">
                 <button mat-button>Test</button>
@@ -20,8 +23,8 @@
 
     <h2 class="display-2">Starred</h2>
     <mat-divider></mat-divider>
-    <section cdkDropList (cdkDropListDropped)="drop($event)">
-        <div *ngFor="let star of client.starred" style="width: 100%">
+    <!-- <section cdkDropList (cdkDropListDropped)="drop($event)">
+        <div *ngFor="let star of (client | async)?.starred" style="width: 100%">
             <ng-container [ngTemplateOutlet]='star.type ? campaignTemplate : noteTemplate'
             [ngTemplateOutletContext]="{campaign: star.details}">
             </ng-container>
@@ -49,69 +52,15 @@
                         </ng-template>
                     </mat-form-field>
                 </form>
-                <!-- <div class="level3"
-                cdkDropList
-                #note3List="cdkDropList"
-                [cdkDropListData]="note3"
-                [cdkDropListConnectedTo]="[note1List, note2List]"
-                (cdkDropListDropped)="noteDrop($event)">
-                <div *ngFor="let note of note3" cdkDrag>{{note}}</div>
-            </div> -->
-                <!-- <form>
-                    <ul>
-                       <li *ngFor="let n of note.details" >
-                    <mat-form-field [style.fontSize]="'12px'">
-                        <input [value]="n.note" matInput>
-                    </mat-form-field>
-                       </li>
-                    </ul>
-
-                </form> -->
-                <!-- <mat-card-content> -->
-                    <!-- <form class="example-form">
-                    <mat-form-field *ngFor="let n of note.details" [style.fontSize]="'12px'">
-                        <!-- <mat-label>Autosize textarea</mat-label> -->
-                        <!-- <input matInput [value]="n.note"/>
-                    </mat-form-field>
-                    <button mat-button>note</button>
-                    </form> -->
-                <!-- </mat-card-content> -->
             </mat-card>
         </ng-template>
-
-        <!-- <div cdkDrag>
-        <mat-card>
-
-            <mat-card-title>Title</mat-card-title>
-            <mat-card-subtitle>Campaign</mat-card-subtitle>
-
-            <mat-card-content>
-                <form>
-                    <p>name</p>
-                    <p>link</p>
-                    <p>link</p>
-                    <p>dates</p>
-                    <p>head</p>
-                    <p>subhead</p>
-                </form>
-            </mat-card-content>
-
-            <mat-card-actions align="end">
-                <button mat-button>Edit</button>
-                <button mat-button>Test</button>
-            </mat-card-actions>
-        </mat-card>
-        </div>
-        <div cdkDrag>
-            <mat-card>Section 2</mat-card>
-        </div> -->
-    </section>
+    </section> -->
 
 
     <h2 class="display-2">Campaigns</h2>
     <mat-divider></mat-divider>
     <section cdkDropList>
-        <div *ngFor="let camp of campaigns" cdkDrag style="width: 100%">
+        <div *ngFor="let camp of campaigns | async" cdkDrag style="width: 100%">
             <ng-container [ngTemplateOutlet]='campaignTemplate'
                 [ngTemplateOutletContext]="{campaign: camp}">
             </ng-container>
@@ -122,7 +71,7 @@
             <mat-card-header>
                 <mat-card-title>{{campaign.name}}</mat-card-title>
                 <mat-card-subtitle>Campaign <br>
-                    <a [href]="campaign.link.content">Visit</a>
+                    <a [href]="campaign.link">Visit</a>
                 </mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>

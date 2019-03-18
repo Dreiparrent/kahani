@@ -1,31 +1,27 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ClientHomeComponent } from './client-home/client-home.component';
+import { ClientPathMatcher, ClientGuardService, VideoGuardService } from './client-guard.service';
 import { ClientComponent } from './client.component';
-import { TosComponent } from './tos/tos.component';
+import { HomeComponent } from './home/home.component';
+import { VideosComponent } from './videos/videos.component';
 
 const routes: Routes = [
     {
-        path: '', component: ClientComponent,
+        matcher: ClientPathMatcher.pathMatcher,
+        canActivate: [ClientGuardService],
+        component: ClientComponent,
         children: [
             {
-                path: 'record',
-                loadChildren: './record/record.module#ClientRecordModule',
-                data: { animation: 'RecordPage' }
-            },
-            {
-                path: 'tos',
-                component: TosComponent,
-                data: {animation: 'TosPage'}
+                matcher: ClientPathMatcher.videoMatcher,
+                canActivate: [VideoGuardService],
+                component: VideosComponent
             },
             {
                 path: '',
-                component: ClientHomeComponent,
-                data: { animation: 'HomePage' }
+                component: HomeComponent
             }
         ]
     }
-
 ];
 
 @NgModule({

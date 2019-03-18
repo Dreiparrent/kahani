@@ -1,0 +1,54 @@
+<section #vidSec>
+    <div id="vid">
+        <button #overlayButton id="sidebarButton"
+            [ngStyle]="{'display': sidebar.isOverlay ? 'block' : 'none', 'left': sidebar.isPopout ? '70vw' : '3vw'}"
+            color="primary" mat-fab (click)="mobileOverlay()">{{sidebar.isPopout ? 'close' : 'Details'}}</button>
+        <app-campaign-sidebar #sidebar [userData]="userData" [question]="question"
+        [class.overlayQ]="sidebar.isOverlay && !sidebar.isPopout"
+        [class.popoutOverlay]="sidebar.isOverlay && sidebar.isPopout"
+        (details)="recordReady(deviceList,true, true)" >
+        </app-campaign-sidebar>
+
+        <div>
+            <div #outer style="display: inline-block;">
+            </div>
+            <div #recordButton style="pointer-events: none;">
+                <!-- <mat-icon [ngStyle]="{'color': buttonColor}">fiber_manual_record</mat-icon> -->
+            </div>
+            <div #pauseButton>
+                <mat-icon [ngStyle]="{'color': accent['background-color']}">pause_circle_outline</mat-icon>
+            </div>
+            <div #fsButton>
+                <mat-icon [ngStyle]="{'color': buttonColor}">fullscreen</mat-icon>
+            </div>
+            <div #camButton>
+                <mat-icon>videocam</mat-icon>
+            </div>
+            <div #stopButton>
+                <mat-icon>stop</mat-icon>
+            </div>
+            <div class="sliderButton" #sliderButton>
+                <mat-slider [(value)]="currentTime" [max]="timeMax" [tickInterval]="1" [ngStyle]="{'color': accent['background-color']}"></mat-slider>
+            </div>
+        </div>
+    </div>
+    <div #spinner class="spinner">
+        <mat-progress-spinner [mode]="recordInit ? 'determinate' : 'indeterminate'" [value]="spinnerProgress"></mat-progress-spinner>
+        <div id="countdown">
+            <p>{{recordText}}</p>
+        </div>
+        <!-- [mode]="!recordInit ? 'determinate' : 'indeterminate'" -->
+    </div>
+    <div #startPopup class="starter">
+        <button mat-fab [ngStyle]="_recordProgress === 4 ? primary : warn" matTooltip="You'll have 3 seconds before recording starts"
+        matTooltipPosition="right" (click)="recordClick()">{{recordStop}}</button>
+    </div>
+    <div #sendPopup class="sender">
+        <button mat-fab (click)="sendRecord()" [ngStyle]="accent">Submit</button>
+    </div>
+    <!-- <video #video autoplay></video> -->
+    <!--   -->
+    <!-- <video #webCamVideo width="400" height="400"> -->
+        <!-- <source #webSource [src]='ws'> -->
+    <!-- </video> -->
+</section>

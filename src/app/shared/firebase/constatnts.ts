@@ -2,82 +2,357 @@ import {
     QuestionBase, TextboxQuestion, DropdownQuestion,
     QuestionType, NumberQuestion, ColorQuestion, TQuestionOptions, DQuestionOptions
 } from './../../shared/forms/question-base';
-export class CampaignBase {
-    id: string;
+import { DocumentReference, DocumentSnapshot, CollectionReference, QueryDocumentSnapshot, DocumentData } from '@angular/fire/firestore';
+import { environment } from 'src/environments/environment';
+class FirebaseBaseClass<T> {
+    protected data: T;
+    public id: string;
+    public ref: DocumentReference;
+    protected constructor(snapData: T) {
+        this.data = snapData;
+    }
+    protected async _setter(data: any) {
+        let success = false;
+        try {
+            const setSuccess = await this.ref.set(data, { merge: true });
+            success = true;
+        } catch (error) {
+            console.error(error);
+            console.warn('Failed to write', Object.keys(data), Object.values(data));
+        } finally {
+            return success;
+        }
+    }
+    protected _setterInside(col: CollectionReference, doc: string, data: any) {
+        return col.doc(doc).set(data, { merge: true });
+    }
+    // protected async _getInside(ref: CollectionReference, docs?: string[]) {
+    //     const setRefs = docs.map(d => ref.doc(d).get());
+    //     const setData = await Promise.all(setRefs).then(data => {
+    //         console.log('get');
+    //         return data;
+    //     });
+    //     return setData;
+    // }
+    protected _init(ref: DocumentReference) {
+        this.ref = ref;
+        this.id = ref.id;
+    }
+}
+export interface IThemeDocument {
+    font: string;
+    size: number;
+    color: string;
+    backgroundColor: string;
+    weight: string;
+}
+interface ITheme extends IThemeDocument {
+    style: { [key: string]: string };
+}
+export interface ICampaignDocument {
     name: string;
-    head: IClientText;
-    subhead: IClientText;
-    link: IClientText;
+    link: string;
+    client: DocumentReference;
+    head: {
+        content: string;
+        type: ContentType;
+    };
+    subhead: {
+        content: string;
+        type: ContentType;
+    };
+    primary: IThemeDocument;
+    accent: IThemeDocument;
+    warn: IThemeDocument;
     background: {
         type: ContentType;
         content: string;
-        poster?: string;
-        color?: string;
+        poster: string;
+        backgroundColor: string;
     };
     questions: IClientQuestion[];
     userQuestions: [TQuestionOptions<any> | DQuestionOptions] | any[];
     extraQuestions?: [TQuestionOptions<any> | DQuestionOptions] | any[];
 }
+export class CampaignBase extends FirebaseBaseClass<ICampaignDocument> {
+    _name: string;
+    _link: string;
+    _client: DocumentReference;
+    _head: {
+        content: string,
+        type: ContentType
+    };
+    _subhead: {
+        content: string,
+        type: ContentType
+    };
+    _primary: IThemeDocument;
+    _accent: IThemeDocument;
+    _warn: IThemeDocument;
+    _background: {
+        type: ContentType;
+        content: string;
+        poster: string;
+        backgroundColor: string;
+    };
+    _questions: IClientQuestion[];
+    _userQuestions: [TQuestionOptions<any> | DQuestionOptions] | any[];
+    _extraQuestions?: [TQuestionOptions<any> | DQuestionOptions] | any[];
+    _questionChosen = 0;
+    questionsRef: CollectionReference;
+}
 export class Campaign extends CampaignBase {
-    userQuestions: QuestionBase<any>[];
-    extraQuestions?: QuestionBase<any>[] = [];
-    constructor(public config: CampaignBase) {
-        super();
-        this.id = config.id;
-        this.name = config.name;
-        this.head = config.head;
-        this.subhead = config.subhead;
-        this.link = config.link;
-        this.questions = config.questions;
-        this.userQuestions = (config.userQuestions as [TQuestionOptions<any> | DQuestionOptions]).map(this.questionMapper);
-        this.background = config.background;
-        if (config.extraQuestions)
-            this.extraQuestions = (config.extraQuestions as [TQuestionOptions<any> | DQuestionOptions]).map(this.questionMapper);
-        this.config.head.style = this.getStyle(this.config.head.config);
-        this.config.subhead.style = this.getStyle(this.config.subhead.config);
+    // questionChosen = 0;
+    // userQuestions: QuestionBase<any>[];
+    // extraQuestions?: QuestionBase<any>[] = [];
+
+    get name() { return this._name; }
+    set name(name: string) { this._setter({ name: name }).then(success => this._name = success ? name : this._name); }
+    get link() { return this._link; }
+    set link(link) {
+        this._setter({ link: link }).then(success => this._link = success ? link : this._link);
     }
-    private getStyle = (sets: ITextStyle): string => {
-        let baseStyle = '';
-        if (sets.fontSize)
-            baseStyle += `fontsize: ${sets.fontSize};`;
-        if (sets.fontFamily)
-            baseStyle += `fontFamily: ${sets.fontFamily};`;
-        if (sets.fontWeight)
-            baseStyle += `fontWeight: ${sets.fontWeight};`;
-        if (sets.color)
-            baseStyle += `color: ${sets.color};`;
-        return baseStyle;
+    get client() {
+        return this._client;
     }
-    private questionMapper = (q: any) => {
-        switch (q.controlType) {
-            case QuestionType.textbox:
-                return new TextboxQuestion(q);
-            case QuestionType.number:
-                return new NumberQuestion(q);
-            case QuestionType.color:
-                return new ColorQuestion(q);
-            case QuestionType.dropdown:
-                return new DropdownQuestion(q);
+    get head() { return this._head; }
+    set head(head: { content: string, type: ContentType }) {
+        this._setter({ head: head }).then(success => this._head = success ? head : this._head);
+    }
+    get subhead() { return this._subhead; }
+    set subhead(subhead: { content: string, type: ContentType }) {
+        this._setter({ subhead: subhead }).then(success => this._subhead = success ? subhead : this._subhead);
+    }
+    get questions() { return this._questions; }
+    set questions(questions: IClientQuestion[]) {
+        // if (questions.length > this._questions.length) {
+        //     this.ref.collection('questions').add({ question: 'question' }).then(ref => {
+        //         const newQ = questions;
+        //         newQ[newQ.length - 1].ref = ref;
+        //         this._questions = newQ;
+        //         this._setter({ questions: newQ }).then(() => this._questions = newQ);
+        //     });
+        // }
+        if (questions.length < this._questions.length) {
+            this._questions.map(q => q.ref).forEach(q => {
+                if (questions.map(qq => qq.ref).indexOf(q) === -1)
+                    try {
+                        q.delete();
+                    } catch (error) { console.warn(error); }
+            });
+        }
+        this._setter({ questions: questions })
+            .then(success => {
+                if (success) {
+                    this._questions = questions;
+                    questions.forEach(q => {
+                        q.ref.update({ question: q.text });
+                    });
+                }
+            })
+    }
+    get userQuestions() {
+        return (this._userQuestions as [TQuestionOptions<any> | DQuestionOptions]).map(this.questionMapper);
+    }
+    set userQuestions(questions) {
+        const dbQuestions = questions.map(this.questionSetter);
+        this._setter({ userQuestions: dbQuestions }).then(success => this._userQuestions = success ? questions : this._userQuestions);
+    }
+    get extraQuestions() {
+        return (this._extraQuestions as [TQuestionOptions<any> | DQuestionOptions]).map(this.questionMapper);
+    }
+    set extraQuestions(questions) {
+        const dbQuestions = questions.map(this.questionSetter);
+        this._setter({ extraQuestions: dbQuestions }).then(success => this._extraQuestions = success ? questions : this._extraQuestions);
+    }
+    get questionChosen() { return this._questionChosen; }
+    set questionChosen(question: number) {
+        this._questionChosen = question;
+    }
+    get primary() {
+        return Object.assign({ style: this.getStyle(this._primary) }, this._primary);
+        // return this._primary;
+    }
+    set primary(primary: ITheme) {
+        delete primary.style;
+        this._setter({ primary: primary }).then(success => this._primary = success ? primary : this._primary);
+    }
+    get accent() {
+        return Object.assign({style: this.getStyle(this._accent)}, this._accent);
+    }
+    set accent(accent: ITheme) {
+        delete accent.style;
+        this._setter({ accent: accent }).then(success => this._accent = success ? accent : this._accent);
+    }
+    get warn() {
+        return Object.assign({style: this.getStyle(this._warn)}, this._warn);
+    }
+    set warn(warn: ITheme) {
+        delete warn.style;
+        this._setter({ warn: warn }).then(success => this._warn = success ? warn : this._warn);
+    }
+    get background() { return this._background; }
+    set background(background) {
+        this._setter({ background: background }).then(success => this._background = success ? background : this._background);
+    }
+    constructor(private snap: DocumentSnapshot<ICampaignDocument>) {
+        super(snap.data());
+        this._questions = [];
+        this._userQuestions = [];
+        this._extraQuestions = [];
+        this.init();
+        console.log('campaign');
+    }
+    private init() {
+        this._init(this.snap.ref);
+        this._name = this.data.name;
+        this._link = this.data.link;
+        this._client = this.data.client;
+        this._head = this.data.head;
+        this._subhead = this.data.subhead;
+        this._primary = this.data.primary;
+        this._accent = this.data.accent;
+        this._warn = this.data.warn;
+        this._background = this.data.background;
+        this.questionsRef = this.ref.collection('questions');
+        this._questions = this.data.questions;
+        this._userQuestions = this.data.userQuestions;
+        this._extraQuestions = this.data.extraQuestions;
+    }
+
+    private getStyle(theme: IThemeDocument) {
+        return {
+            'background-color': theme.backgroundColor,
+            'color': theme.color,
+            'family': theme.font,
+            'size': theme.size.toString(),
+            'weight': theme.weight
+        };
+    }
+
+    public async addQuestion() {
+        const newRef = await this.questionsRef.add({ question: 'question' });
+        return newRef;
+    }
+
+    private questionMapper = (q: any): TextboxQuestion | NumberQuestion | ColorQuestion | DropdownQuestion => {
+        const qq = q;
+        qq.controlType = QuestionType.textbox;
+        if (q.required)
+            qq.required = true;
+        else qq.required = false;
+        switch (q.type) {
+            case 'number':
+                qq.controlType = QuestionType.number;
+                return new ColorQuestion(qq);
+            case 'dropdown':
+                qq.controlType = QuestionType.dropdown;
+                return new DropdownQuestion(qq);
+            default:
+                return new TextboxQuestion(qq);
         }
     }
-}
 
-export class ClientBase {
+    private questionSetter = (q: TextboxQuestion | NumberQuestion | ColorQuestion | DropdownQuestion):
+        TQuestionOptions<any> | DQuestionOptions => {
+        const baseQuestion = {
+            key: q.key,
+            label: q.label,
+            order: q.order,
+            required: q.required,
+            type: q.type
+        };
+        if (q.options)
+            Object.assign(baseQuestion, { options: q.options });
+        return baseQuestion;
+    }
+}
+export interface IClientDocument {
     name: string;
+    campaigns: DocumentReference[];
     contact: {
-        email?: string,
-        phone?: string,
-        website?: string,
-        [key: string]: string
+        email: string;
+        phone: string;
+        website: string;
+        address: string;
     };
-    notes: IClientNote[];
-    _campaigns: CampaignBase[];
-    _starred: {type: StarType, id: string}[];
+    starred: {
+        type: StarType;
+        id: string // DocumentReference
+    }[];
+}
+export class ClientBase extends FirebaseBaseClass<IClientDocument> {
+    protected campaignsRef: DocumentReference[];
+    _name: string;
+    _contact: {
+        email: string,
+        phone: string,
+        website: string,
+        address: string
+    };
+    _notes: IClientNote[];
+    _campaigns: Campaign[] = [];
+    _starred: { type: StarType, id: string }[];
 }
 
 export class Client extends ClientBase {
-    campaigns: Campaign[];
-    starred: { type: StarType; details: IClientNote | Campaign}[];
+    get campaigns() {
+        return this._campaigns;
+    }
+    set campaigns(camps) {
+        this._setter({ campaigns: camps.map(c => c.ref) });
+    }
+    starred: { type: StarType; details: IClientNote | Campaign }[] = [];
+    get name() { return this._name; }
+    set name(name: string) {
+        this._setter({ name: name }).then(success => this.name = success ? name : this._name);
+    }
+    get contact() { return this._contact; }
+    set contact(contact: any) {
+        this._setter({ contact: contact }).then(success => this._contact = success ? contact : this._contact);
+    }
+    get notes() {
+        return this._notes;
+    }
+    constructor(private snap: DocumentSnapshot<IClientDocument>) {
+        super(snap.data());
+        this._notes = [
+            {
+                id: '2',
+                name: 'Test Note',
+                details: [
+                    {
+                        note: 'note 1',
+                        level: 0
+                    },
+                    {
+                        note: 'note 2',
+                        level: 1
+                    },
+                    {
+                        note: 'note 3',
+                        level: 2
+                    },
+                ]
+            }
+        ];
+        this.init();
+    }
+    private init() {
+        // if (!environment.useLocal) {
+            this._init(this.snap.ref);
+            this._name = this.data.name;
+            this._contact = this.data.contact;
+            this.campaignsRef = this.data.campaigns;
+        // }
+    }
+    public async getCampaigns() {
+        const campSnap = await Promise.all(this.campaignsRef.map(c => c.get()));
+        const camps = campSnap.map(c => new Campaign(c as DocumentSnapshot<ICampaignDocument>));
+        this._campaigns = camps;
+        return camps;
+    }
+    /*
     constructor(public config: ClientBase) {
         super();
         this.name = config.name;
@@ -100,6 +375,7 @@ export class Client extends ClientBase {
             // else return;
         }) as any;
     }
+    */
 }
 
 interface IClientText {
@@ -114,16 +390,18 @@ interface ITextStyle {
     color?: string;
     fontSize: number;
 }
-interface IClientQuestion {
+export interface IClientQuestion {
     text: string;
     length: number;
+    order: number;
+    ref: DocumentReference;
 }
 export interface IBaseUserData {
     email: string;
     name: string;
 }
 export enum ContentType { color, text, image, video }
-
+/*
 export const testConfig: CampaignBase = {
     id: '1',
     name: 'Project X-ITE',
@@ -238,7 +516,7 @@ export const testClient: ClientBase = {
         }
     ]
 };
-
+*/
 export interface IClientNote {
     id: string;
     name: string;

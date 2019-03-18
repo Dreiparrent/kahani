@@ -11,9 +11,12 @@ import { DashDetailsComponent } from './details/details.component';
 import { KahaniFormsModule } from 'src/app/shared/forms/forms.module';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { DashRoutingModule } from './dash-routing.module';
+import { SidenavComponent } from 'src/app/layouts/sidenav/sidenav.component';
+import { SidenavService } from 'src/app/layouts/sidenav/sidenav.service';
+import { DashGuardService } from './dash-guard.service';
 
 @NgModule({
-  declarations: [DashComponent, DashSidenavComponent, DashDetailsComponent],
+  declarations: [SidenavComponent, DashComponent, DashSidenavComponent, DashDetailsComponent],
     imports: [
       DashRoutingModule,
       CommonModule,
@@ -28,6 +31,10 @@ import { DashRoutingModule } from './dash-routing.module';
       MatInputModule,
       MatExpansionModule,
       MatTabsModule
-  ]
+    ],
+    providers: [
+        DashGuardService,
+        SidenavService
+    ]
 })
 export class DashModule { }

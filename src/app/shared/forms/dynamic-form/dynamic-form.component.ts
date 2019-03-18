@@ -1,22 +1,29 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { QuestionBase } from '../question-base';
 import { FormGroup } from '@angular/forms';
 import { QuestionControlService } from '../question-control.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dynamic-form',
   templateUrl: './dynamic-form.component.html',
   styleUrls: ['./dynamic-form.component.scss']
 })
-export class DynamicFormComponent<T> implements OnInit {
+export class DynamicFormComponent<T> implements OnInit, OnDestroy {
     @Input() questions: QuestionBase<any>[] = [];
     form: FormGroup;
     @Output() submit = new EventEmitter<T>();
+    @Output() changes = new EventEmitter<{[key: string]: any}>();
+    private valueChanges: Subscription;
 
     constructor(private qcs: QuestionControlService) { }
 
     ngOnInit() {
         this.form = this.qcs.toFormGroup(this.questions);
+        this.valueChanges = this.form.valueChanges.subscribe(changes => {
+            console.log(changes);
+            this.changes.next(changes);
+        });
     }
 
     onSubmit() {
@@ -34,5 +41,8 @@ export class DynamicFormComponent<T> implements OnInit {
             return depVal === question.dependent.value;
         }
         return true;
+    }
+    ngOnDestroy() {
+        this.valueChanges.unsubscribe();
     }
 }

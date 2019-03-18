@@ -1,23 +1,25 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { slideInAnimation } from './animations';
+import { FirebaseService } from 'src/app/shared/firebase/firebase.service';
 
 @Component({
   selector: 'app-client',
   templateUrl: './client.component.html',
-    styleUrls: ['./client.component.scss'],
-    animations: [
-        slideInAnimation
-  ]
+  styleUrls: ['./client.component.scss']
 })
 export class ClientComponent implements OnInit {
 
-    constructor() { }
+    get primary() {
+        return this.fireabse.campaign.primary.style;
+    }
+    get accent() {
+        return this.fireabse.campaign.accent.size;
+    }
+
+    constructor(private fireabse: FirebaseService) {
+
+    }
 
     ngOnInit() {
     }
 
-    prepareRoute(outlet: RouterOutlet) {
-        return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
-    }
 }

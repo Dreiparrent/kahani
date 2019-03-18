@@ -1,5 +1,26 @@
 # Change log
 
+## [0.3.0](https://github.com/dreiparrent/kahani/compare/0.2.0...0.3.0) (03-17-2019)
+### Features
+* **UI Improvements:** Questions included in initial popup. Playback scrub bar added.
+* **Login:** visit ~/login to activate your account
+* **Login features:** Currently, adding accounts is a manual process but ~client/login does function
+* **Dash Update:** The dashboard is connected to the database and all features will update the final product
+* **Client Page:** This is just the beginning. You can find this page in the dash client card or ~client/0
+* **Videos Page:** A rather basic page to list all responses to a question
+* **Video Submission:** The submit button does work - sorry that the indicator is currently an alert.
+
+#### Hidden Features
+* **Dropdown Questions:** To sucessfully create a dropdown questions, write the question followed by ":" with each choice followed by a ",". Spaces between the seperators is optional. (this will be updated in a later version)
+* * *dropdown example:* "question: option 1, option 2"
+
+### Bug Fixes
+* **Dragging:** If a question is dragged in dashboard, it will reorder in the database
+
+### Breaking Changes
+* **Notes/Starred:** Both the notes and starred feature was removed for a later update
+* **Autocomplete:** For some reason the prerecord popup does not use autocomplete
+
 ## [0.2.0](https://github.com/dreiparrent/kahani/compare/0.1.2...0.2.0) (03-03-2019)
 ### Features
 * **Dash:** Located at ~/dash

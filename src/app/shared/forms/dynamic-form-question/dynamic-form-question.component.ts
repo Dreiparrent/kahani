@@ -22,4 +22,9 @@ export class DynamicFormQuestionComponent implements OnInit {
     ngOnInit() {
         // if (this.question.dependent)
     }
+    setColor(color: string) {
+        const values = this.form.value;
+        values.color = color;
+        this.form.setValue(values);
+    }
 }

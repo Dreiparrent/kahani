@@ -5,11 +5,11 @@
 <mat-sidenav-content>
 </mat-sidenav-content> -->
 <mat-toolbar color="primary">
-    <h1 (click)="toggle()">CLIENT</h1>
+    <h1 (click)="toggle()">ADMIN</h1>
 </mat-toolbar>
 <mat-drawer-container class="example-container">
     <mat-drawer #campaign mode="side" position="end" [opened]="opened">
-        <app-dash-details [campaign]="details" (close)="campaign.close()"></app-dash-details>
+        <app-dash-details [campaign]="details | async" (close)="campaign.close()"></app-dash-details>
     </mat-drawer>
     <mat-drawer-content>
         <app-campaign (details)="showDetails($event)" class="mat-typography"></app-campaign>

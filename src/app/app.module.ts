@@ -11,28 +11,31 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularFireModule } from '@angular/fire';
 import { MatGridListModule, MatCardModule, MatMenuModule, MatIconModule, MatButtonModule, MatSidenavModule } from '@angular/material';
 import { LayoutModule } from '@angular/cdk/layout';
-import { ClientModule } from './components/client/client.module';
+import { CampaignModule } from './components/campaign/campaign.module';
 import { FirebaseService } from './shared/firebase/firebase.service';
 import { ResizeService } from './shared/resize/resize.service';
+import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { VersionComponent } from './components/version/version.component';
-import { SidenavComponent } from './layouts/sidenav/sidenav.component';
-import { SidenavService } from './layouts/sidenav/sidenav.service';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { LoginComponent } from './components/login/login.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         VersionComponent,
-        SidenavComponent
+        LoginComponent
     ],
     imports: [
-        ClientModule,
+        CampaignModule,
         DashModule,
         BrowserModule,
         BrowserAnimationsModule,
         AppRoutingModule,
         ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
         AngularFireModule.initializeApp(environment.firebase),
+        AngularFireAuthModule,
+        AngularFirestoreModule,
         AngularFireStorageModule,
         MatGridListModule,
         MatCardModule,
@@ -45,8 +48,7 @@ import { SidenavService } from './layouts/sidenav/sidenav.service';
     ],
     providers: [
         FirebaseService,
-        ResizeService,
-        SidenavService
+        ResizeService
     ],
     bootstrap: [AppComponent]
 })

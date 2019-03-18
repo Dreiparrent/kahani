@@ -1,58 +1,25 @@
-import {
-    MatGridListModule,
-    MatCardModule,
-    MatMenuModule,
-    MatIconModule,
-    MatButtonModule,
-    MatSidenavModule
-} from '@angular/material';
-import { FirebaseService } from 'src/app/firebase/firebase.service';
-import { ResizeService } from 'src/app/resize/resize.service';
-import { TestBed, async } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { AppComponent } from './app.component';
-import { LayoutModule } from '@angular/cdk/layout';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialStubModule } from './firebase/material.stub';
-import { Component } from '@angular/core';
-
-/* tslint:disable*/
-@Component({ selector: 'app-test-dash', template: '' })
-class TestDashStubComponent { }
-@Component({ selector: 'app-version', template: '' })
-class VersionStubComponent {}
-/* tslint:enable*/
+import { environment } from 'src/environments/environment';
 describe('AppComponent', () => {
-    beforeEach(async(() => {
+    let component: AppComponent;
+    let fixture: ComponentFixture<AppComponent>;
+    beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [
-                RouterTestingModule,
-                BrowserAnimationsModule,
-                MaterialStubModule
-            ],
-            declarations: [AppComponent, TestDashStubComponent, VersionStubComponent],
-            providers: [FirebaseService, ResizeService]
-        }).compileComponents();
-    }));
-
-    it('should create the app', () => {
-        const fixture = TestBed.createComponent(AppComponent);
-        const app = fixture.debugElement.componentInstance;
-        expect(app).toBeTruthy();
+            schemas: [NO_ERRORS_SCHEMA],
+            declarations: [AppComponent]
+        });
+        fixture = TestBed.createComponent(AppComponent);
+        component = fixture.componentInstance;
     });
-
-    it(`should have as title 'kahani'`, () => {
-        const fixture = TestBed.createComponent(AppComponent);
-        const app = fixture.debugElement.componentInstance;
-        expect(app.title).toEqual('kahani');
+    it('can load instance', () => {
+        expect(component).toBeTruthy();
     });
-
-    // it('should render title in a h1 tag', () => {
-    //     const fixture = TestBed.createComponent(AppComponent);
-    //     fixture.detectChanges();
-    //     const compiled = fixture.debugElement.nativeElement;
-    //     expect(compiled.querySelector('h1').textContent).toContain(
-    //         'Welcome to kahani!'
-    //     );
-    // });
+    it('title defaults to: kahani', () => {
+        expect(component.title).toEqual('kahani');
+    });
+    it('showVersion defaults to: environment.version.includeVersion', () => {
+        expect(component.showVersion).toEqual(environment.version.includeVersion);
+    });
 });

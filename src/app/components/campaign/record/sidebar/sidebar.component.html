@@ -1,0 +1,11 @@
+<div #outer class="outer" [ngStyle]="{'background-image': getStyle()}">
+    <h1>{{name}}</h1>
+    <mat-action-list>
+        <h2>Question</h2>
+        <mat-list-item role="list">{{question}}</mat-list-item>
+        <h2>Details</h2>
+        <mat-list-item *ngFor="let answer of userAnswers">{{answer}}</mat-list-item>
+        <mat-divider></mat-divider>
+        <button mat-list-item (click)="changeDetails()">Change Details</button>
+    </mat-action-list>
+</div>

@@ -17,8 +17,8 @@ interface IQuestionOptions<T> {
 export interface TQuestionOptions<T> extends IQuestionOptions<T> {
     type?: string;
 }
-export interface DQuestionOptions extends IQuestionOptions<string | number> {
-    options?: { key: string | number; value: string | number }[];
+export interface DQuestionOptions extends IQuestionOptions<string | number | boolean> {
+    options?: { key: string | number | boolean; value: string | number }[];
 }
 export class QuestionBase<T> {
     value: T;
@@ -28,7 +28,7 @@ export class QuestionBase<T> {
     order: number;
     controlType: QuestionType;
     type?: string;
-    options?: { key: string | number; value: T }[];
+    options?: { key: string | number | boolean; value: T }[];
     dependent?: {
         key: string;
         value: any;
@@ -37,7 +37,9 @@ export class QuestionBase<T> {
     constructor(options: IQuestionOptions<T> = {}) {
         this.key = options.key || '';
         this.label = options.label || '';
-        this.required = !!options.required;
+        if (options.required)
+            this.required = true;
+        else this.required = false;
         this.order = options.order === undefined ? 1 : options.order;
         this.controlType = options.controlType || QuestionType.textbox;
         this.dependent = options.dependent ? options.dependent : null;
@@ -71,10 +73,10 @@ export class ColorQuestion extends QuestionBase<any> {
         this.type = options['type'] || 'color';
     }
 }
-export class DropdownQuestion extends QuestionBase<string | number> {
+export class DropdownQuestion extends QuestionBase<string | number | boolean> {
     controlType = QuestionType.dropdown;
     type = QuestionType[QuestionType.dropdown];
-    options: { key: string | number; value: string | number }[] = [];
+    options: { key: string | number | boolean; value: string | number }[] = [];
 
     constructor(options: DQuestionOptions = {}) {
         super(options);

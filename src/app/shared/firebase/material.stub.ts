@@ -144,18 +144,24 @@ export class MatExpansionPanelHeaderStubComponent {
 export class MatExpansionPannelStubComponent {
     @Input() expanded: boolean;
 }
+@Directive({ selector: 'mat-button-toggle-group', exportAs: 'matButtonToggleGroup' })
+export class MatToggleGroupStubDirective extends MatButtonToggleGroupStubComponent {
+}
 /* tslint:enable */
 @NgModule({
     declarations: [
         MatExpansionPanelHeaderStubComponent,
-        MatExpansionPannelStubComponent
+        MatExpansionPannelStubComponent,
+        MatToggleGroupStubDirective
     ],
+    providers: [MatToggleGroupStubDirective],
     exports: [
         MatExpansionPanelHeaderStubComponent,
-        MatExpansionPannelStubComponent
+        MatExpansionPannelStubComponent,
+        MatToggleGroupStubDirective
     ]
 })
-export class MatExpansionPanelStubModule { };
+export class MatExpansionPanelStubModule { }
 
 // ------------------------------------------------------------------------------------------------
 

@@ -1,0 +1,9 @@
+<mat-card *ngFor="let video of videos | async; index as i">
+    <h1>{{video.time | date : 'medium' : 'local'}}</h1>
+    <h2>questions</h2>
+    <p *ngFor="let q of getVals(video.userQuestions)" >{{q}}</p>
+    <video width="320" height="240" [src]="video.link" controls>
+        Your browser does not support the video tag.
+    </video> <br>
+    <a [href]="video.link" target="_blank">video</a>
+</mat-card>

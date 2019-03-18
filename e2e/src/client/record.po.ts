@@ -38,11 +38,16 @@ export class RecordPage {
     isQuestionDisplayed() {
         return this.questionEl.isPresent() as Promise<boolean>;
     }
-
+    isStarterDisplayed() {
+        return this.recordEl.$('.starter').isPresent() as Promise<boolean>;
+    }
     getStarterPos() {
         return this.recordEl.$('.starter').getCssValue('right') as Promise<string>;
     }
 
+    isSenderDisplayed() {
+        return this.recordEl.$('.sender').isPresent() as Promise<boolean>;
+    }
     getSenderPos() {
         return this.recordEl.$('.sender').getCssValue('right') as Promise<string>;
     }

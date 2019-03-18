@@ -3,6 +3,7 @@ import { FirebaseService } from 'src/app/shared/firebase/firebase.service';
 import { Client, Campaign, IClientNote, StarType, ContentType } from 'src/app/shared/firebase/constatnts';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { environment } from 'src/environments/environment';
+import { Observable, BehaviorSubject, Subject } from 'rxjs';
 
 @Component({
     selector: 'app-campaign',
@@ -11,12 +12,11 @@ import { environment } from 'src/environments/environment';
 })
 export class ClientComponent implements OnInit {
     @Output() details = new EventEmitter<Campaign>();
-    public client: Client;
-    public get contact() {
-        return Object.values(this.client.contact);
-    }
-    public get campaigns() { return this.client.campaigns; }
-    public get notes() { return this.client.notes; }
+    public client = new BehaviorSubject<Client>(null);
+    public campaigns = new Subject<Campaign[]>();
+    public contact = new Subject<string[]>();
+    // public get campaigns() { return this.client.campaigns; }
+    public notes = new Subject<IClientNote[]>();
     public starred: { type: StarType; details: IClientNote | Campaign }[];
     public contentType = ContentType;
     public note1: ['1'];
@@ -25,8 +25,21 @@ export class ClientComponent implements OnInit {
     // public get starred() { return this.client.starred; }
 
     constructor(private firebase: FirebaseService) {
-        this.client = firebase.client;
-        this.starred = this.client.starred;
+        this.init();
+        // this.starred = this.client.starred;
+    }
+    async init() {
+        const client = await this.firebase.getClient('0');
+        if (client) {
+            const campaigns = await client.getCampaigns();
+            if (campaigns)
+                this.campaigns.next(campaigns);
+            const notes = client.notes;
+            if (notes)
+                this.notes.next(notes);
+            this.contact.next(Object.keys(client.contact));
+        }
+        this.client.next(client);
     }
     upLevel(details) {
         details.level = details.level > 0 ? details.level - 1 : details.level;
@@ -35,11 +48,13 @@ export class ClientComponent implements OnInit {
         details.level = details.level < 5 ? details.level + 1 : details.level;
     }
     delNote(note: IClientNote, index: number) {
-        if (note.details[index].note === '')
-        note.details.splice(index, 1);
+        if (note.details[index].note === '') note.details.splice(index, 1);
     }
     addNote(note: IClientNote, index: number) {
-        note.details.splice(index + 1, 0, { level: note.details[index].level, note: '' });
+        note.details.splice(index + 1, 0, {
+            level: note.details[index].level,
+            note: ''
+        });
     }
     test() {
         console.log('test');
@@ -49,19 +64,31 @@ export class ClientComponent implements OnInit {
     }
 
     toggle(campaign: Campaign) {
+        this.firebase.campaign = campaign;
         this.details.next(campaign);
     }
 
-    ngOnInit() {
+    getClient() {
+        if (this.client.getValue())
+            return this.client.getValue().ref.id;
+        else return '';
     }
+
+    ngOnInit() {}
     noteDrop(event: CdkDragDrop<string[]>) {
         if (event.previousContainer === event.container) {
-            moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-        } else {
-            transferArrayItem(event.previousContainer.data,
+            moveItemInArray(
                 event.container.data,
                 event.previousIndex,
-                event.currentIndex);
+                event.currentIndex
+            );
+        } else {
+            transferArrayItem(
+                event.previousContainer.data,
+                event.container.data,
+                event.previousIndex,
+                event.currentIndex
+            );
         }
     }
 }

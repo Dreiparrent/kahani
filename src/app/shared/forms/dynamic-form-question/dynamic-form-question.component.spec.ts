@@ -1,32 +1,22 @@
-import { environment } from 'src/environments/environment';
-import { MaterialStubModule } from 'src/app/firebase/material.stub';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { QuestionType } from '../question-base';
 import { DynamicFormQuestionComponent } from './dynamic-form-question.component';
-import { FormGroup, ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
-import { QuestionControlService } from '../question-control.service';
-
 describe('DynamicFormQuestionComponent', () => {
-    let component: DynamicFormQuestionComponent;
-    let fixture: ComponentFixture<DynamicFormQuestionComponent>;
-
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
-            declarations: [DynamicFormQuestionComponent],
-            imports: [MaterialStubModule, ReactiveFormsModule]
-        }).compileComponents();
-    }));
-
-    beforeEach(() => {
-        fixture = TestBed.createComponent(DynamicFormQuestionComponent);
-        component = fixture.componentInstance;
-        component.question = environment.clientConfig.userQuestions[0];
-        const expectedFormGroup = new QuestionControlService().toFormGroup(environment.clientConfig.userQuestions)
-        component.form = expectedFormGroup;
-        fixture.detectChanges();
+  let component: DynamicFormQuestionComponent;
+  let fixture: ComponentFixture<DynamicFormQuestionComponent>;
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      schemas: [NO_ERRORS_SCHEMA],
+      declarations: [DynamicFormQuestionComponent]
     });
-
-    it('should create', () => {
-        expect(component).toBeTruthy();
-    });
+    fixture = TestBed.createComponent(DynamicFormQuestionComponent);
+    component = fixture.componentInstance;
+  });
+  it('can load instance', () => {
+    expect(component).toBeTruthy();
+  });
+  it('questionType defaults to: QuestionType', () => {
+    expect(component.questionType).toEqual(QuestionType);
+  });
 });

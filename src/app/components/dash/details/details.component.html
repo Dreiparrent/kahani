@@ -10,6 +10,14 @@
     <mat-tab #contentTab>
         <ng-template mat-tab-label><div (click)="openAll = contentTab.isActive ? !openAll : openAll">Content</div></ng-template>
         <mat-accordion [multi]="true">
+            <!-- <mat-expansion-panel *ngIf="_campaign" >
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Link
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <input matInput placeholder="link" type="text" [(ngModel)]="link">
+            </mat-expansion-panel> -->
             <mat-expansion-panel *ngFor="let detail of details; index as i" [expanded]="openAll">
                 <!-- <h2>{{detailType[i]}}</h2> -->
                 <mat-expansion-panel-header>
@@ -18,12 +26,13 @@
                         {{detailType[i]}}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-dynamic-form *ngIf="i < detailType.Questions; else reorderTemplate" [questions]="detail">
+                <app-dynamic-form *ngIf="i < detailType.Questions; else reorderTemplate" [(questions)]="detail"
+                (changes)="changes($event, i)">
                 </app-dynamic-form>
                 <ng-template #reorderTemplate>
                     <div cdkDropList (cdkDropListDropped)="drop($event, i)">
                         <mat-card *ngFor="let q of detail; index as j" cdkDrag>
-                            <app-dynamic-form [questions]="q"></app-dynamic-form>
+                            <app-dynamic-form [(questions)]="q" (changes)="changes($event, i, j)"></app-dynamic-form>
                             <mat-card-actions>
                                 <button mat-button (click)="remove(i,j)">Remove</button>
                             </mat-card-actions>
@@ -40,7 +49,12 @@
         <ng-template mat-tab-label>
             <div (click)="openAll = themeTab.isActive ? !openAll : openAll">Theme</div>
         </ng-template>
+
         <mat-accordion [multi]="true">
+            <mat-expansion-panel [expanded]="openAll">
+                <mat-expansion-panel-header>Preview</mat-expansion-panel-header>
+                <app-dynamic-form [(questions)]="previewColors"></app-dynamic-form>
+            </mat-expansion-panel>
             <mat-expansion-panel *ngFor="let detail of themes; index as i" [expanded]="openAll" [ngStyle]="getStyle(i)">
                 <!-- <h2>{{detailType[i]}}</h2> -->
                 <mat-expansion-panel-header>
@@ -48,7 +62,7 @@
                         {{themeType[i]}}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-dynamic-form [questions]="detail"></app-dynamic-form>
+                <app-dynamic-form [(questions)]="detail" (changes)="changeTheme($event, i)"></app-dynamic-form>
             </mat-expansion-panel>
         </mat-accordion>
     </mat-tab>
@@ -65,6 +79,7 @@
                 </mat-expansion-panel-header>
                 <mat-card>
                     Videos
+                    <a [routerLink]="['/client',campaign.client.id,'videos',campaign.ref.id,q[2].value.id]">link</a>
                 </mat-card>
                 <mat-card>
                     Some stats or something

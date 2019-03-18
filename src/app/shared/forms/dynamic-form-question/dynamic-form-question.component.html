@@ -13,10 +13,10 @@
         </ng-container>
 
         <ng-container *ngSwitchCase="questionType.color">
-            <input matInput [placeholder]="question.label" [id]="question.key" [type]="question.type"
+            <input #colorPicker matInput [placeholder]="question.label" [id]="question.key" [type]="question.type"
                 [formControlName]="question.key" [(value)]="question.value" style="display: none;">
-            <span [style.color]="question.value" [cpPosition]="'right'" [cpPositionOffset]="'80%'" [cpPositionRelativeToArrow]="true"
-                [(colorPicker)]="question.value">{{question.key}}</span>
+            <span [style.color]="question.value" [cpPosition]="'right'" [cpPositionOffset]="'80%'" [cpPositionRelativeToArrow]="true" [cpAlphaChannel]="'always'" [cpOutputFormat]="'hex'"
+                [(colorPicker)]="question.value" [cpPresetColors]="['#673ab7', '#ff4081', '#f44336', '#000000bb']" (colorPickerChange)="setColor($event)">{{question.key}}</span>
         </ng-container>
 
         <ng-container *ngSwitchCase="questionType.dropdown">

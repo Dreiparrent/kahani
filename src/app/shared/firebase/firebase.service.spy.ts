@@ -11,9 +11,9 @@ const mockFireStorage: Partial<AngularFireStorage> = {
 
 export const mockFirebase: Partial<FirebaseService> = {
     uploadRecord: (blob: Blob) => {
-        return;
+        return Promise.resolve(true);
     },
-    campaign: new Campaign(environment.clientConfig),
+    // campaign: new Campaign(environment.campaignConfig),
 };
 export const mockAngularFireStorage = {
     ref: () =>  ''

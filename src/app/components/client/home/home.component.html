@@ -1,0 +1,4 @@
+<mat-card *ngFor="let response of responses | async">
+    <h1>{{response.question}}</h1>
+    <a [routerLink]="['videos/0/'+response.link]">video</a>
+</mat-card>
